@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+
+button{
+    cursor: pointer;
+}
+
+.color-gradient{
+    filter: brightness(0) saturate(100%) invert(93%) sepia(78%) saturate(2%) hue-rotate(258deg) brightness(104%) contrast(100%);
+}
