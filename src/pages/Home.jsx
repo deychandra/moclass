@@ -1,5 +1,6 @@
 import React from "react";
 import banner from "../assets/images/banner.png"
+import JobTabs from "./jobsData";
 
 const Home = () => {
   return (
@@ -171,6 +172,8 @@ const Home = () => {
         </div>
       </section>
 
+
+
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -201,6 +204,8 @@ const Home = () => {
             </div>
         </div>
     </section>
+
+    <JobTabs/>
 
     <section className="py-20 bg-[#1e3a5f] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
