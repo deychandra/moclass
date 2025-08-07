@@ -1,9 +1,10 @@
 import React from "react";
+import banner from "../assets/images/banner.png"
 
 const Home = () => {
   return (
     <>
-      <section className="bg-gradient-to-br to-blue-50 py-20">
+      <section className="bg-gradient-to-br to-blue-50 py-10 min-h-screen flex items-center" style={{backgroundImage: `url(${banner})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat"}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -26,7 +27,7 @@ const Home = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+              <div className="bg-white rounded-2xl shadow-2xl p-8  transition-transform duration-300">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
