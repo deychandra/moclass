@@ -1,6 +1,7 @@
 import React from "react";
 import banner from "../assets/images/banner.png"
 import JobTabs from "./jobsData";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -19,12 +20,12 @@ const Home = () => {
                 available across various domains.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-[#1e3a5f] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all transform hover:scale-105">
+                <Link to="/find-internships" className="bg-[#1e3a5f] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all transform hover:scale-105">
                   Find Internships
-                </button>
-                <button className="border-2 border-[#1e3a5f] text-[#1e3a5f] px-8 py-4 rounded-lg font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all">
+                </Link>
+                <Link to="/post-internship" className="border-2 border-[#1e3a5f] text-[#1e3a5f] px-8 py-4 rounded-lg font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all">
                   Post Internship
-                </button>
+                </Link>
               </div>
             </div>
             <div className="relative">
