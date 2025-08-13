@@ -6,6 +6,7 @@ import Register from "./components/Register"
 import JobDetails from "./pages/JobDetails"
 import PostInternship from "./pages/PostInternship"
 import FindInternship from "./pages/FindInternship"
+import EmployerProfile from "./pages/EmployerProfile"
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/post-internship" element={<PostInternship />} />
           <Route path="/find-internships" element={<FindInternship />} />
+          <Route path="/employer-profile" element={<EmployerProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>
