@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PostInternship = () => {
   return (
@@ -45,12 +46,14 @@ const PostInternship = () => {
                 placeholder="Mobile Number"
                 className="w-full border rounded-lg px-4 py-2 text-sm"
               />
+              <Link to="/employer-profile">
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700"
               >
                 Post for Free
               </button>
+              </Link>
             </form>
             <p className="mt-3 text-sm text-center text-gray-500">
               Already registered?{" "}
