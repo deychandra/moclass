@@ -23,13 +23,7 @@ const Header = () => {
                 Internships
               </Link>
               <Link
-                to="/companies"
-                className="text-gray-700 hover:text-[#1e3a5f] transition-colors"
-              >
-                Companies
-              </Link>
-              <Link
-                to="/about"
+                to="/aboutUs"
                 className="text-gray-700 hover:text-[#1e3a5f] transition-colors"
               >
                 About
@@ -42,9 +36,12 @@ const Header = () => {
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <button className="text-[#1e3a5f] hover:text-blue-800 font-medium">
-                Login
-              </button>
+           
+
+
+              <Link to="/login" className="text-[#1e3a5f] hover:text-blue-800 font-medium">
+              Login
+              </Link>
               <Link
                 to="/Register"
                 className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
