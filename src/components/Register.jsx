@@ -3,20 +3,27 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 space-y-7">
-        {/* Header */}
+        
+       
         <div className="text-center space-y-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-            Sign-up and <span className="text-blue-600 underline underline-offset-4">apply for free</span>
+            Sign-up and{" "}
+            <span className="text-blue-600 underline underline-offset-4">
+              apply for free
+            </span>
           </h1>
           <p className="text-gray-600 mt-1 text-lg">
             400+ companies hiring on moclass
           </p>
         </div>
         
-        {/* Social login */}
-        <button className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 text-base rounded-lg font-medium hover:bg-blue-700 transition shadow mb-3">
+     
+        <button
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 text-base rounded-lg font-medium hover:bg-blue-700 transition shadow mb-3"
+          aria-label="Sign up with Google"
+        >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google icon"
@@ -25,14 +32,14 @@ const Register = () => {
           <span>Sign up with Google</span>
         </button>
         
-        {/* Divider */}
+      
         <div className="relative flex items-center mb-3">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-400 text-sm bg-white px-2">Or</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
         
-        {/* Sign up with Email */}
+       
         <Link
           to="/signup"
           className="w-full flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition text-gray-800 text-base mb-2 shadow-sm"
@@ -54,21 +61,21 @@ const Register = () => {
           Sign up with Email
         </Link>
         
-        {/* Terms and Conditions */}
+       
         <p className="text-xs text-gray-600 text-center">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <Link to="/terms" className="text-blue-600 hover:underline">
             Terms and Conditions
-          </a>
+          </Link>
           .
         </p>
         
-        {/* Already Registered */}
+     
         <p className="text-sm text-center mt-2">
           Already registered?{" "}
-          <a href="#" className="text-blue-600 hover:underline font-medium">
+          <Link to="/login" className="text-blue-600 hover:underline font-medium">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>
