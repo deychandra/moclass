@@ -259,6 +259,85 @@ const Home = () => {
       {/* Job Tabs */}
       <JobTabs />
 
+
+
+{/* Testimonial Section */}
+<section className="py-14 sm:py-20 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-12">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+        What Students Say
+      </h2>
+      <p className="text-sm sm:text-lg lg:text-xl text-gray-600">
+        Hear from students who found their dream internships through MoclassName
+      </p>
+    </div>
+
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Testimonial 1 */}
+      <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 hover:shadow-xl transition-all">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://randomuser.me/api/portraits/women/65.jpg"
+            alt="student"
+            className="w-14 h-14 rounded-full object-cover mr-4"
+          />
+          <div>
+            <h3 className="font-semibold text-gray-900">Sophie Turner</h3>
+            <p className="text-sm text-gray-500">Design Intern @ Figma</p>
+          </div>
+        </div>
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+          “MoclassName helped me land my first design internship at Figma. 
+          The process was smooth and the opportunities were truly top-notch.”
+        </p>
+      </div>
+
+      {/* Testimonial 2 */}
+      <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 hover:shadow-xl transition-all">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://randomuser.me/api/portraits/men/42.jpg"
+            alt="student"
+            className="w-14 h-14 rounded-full object-cover mr-4"
+          />
+          <div>
+            <h3 className="font-semibold text-gray-900">Rahul Mehta</h3>
+            <p className="text-sm text-gray-500">SWE Intern @ Google</p>
+          </div>
+        </div>
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+          “I never thought I’d get into Google so early in my career. 
+          The platform matched my profile perfectly with opportunities that suited me.”
+        </p>
+      </div>
+
+      {/* Testimonial 3 */}
+      <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 hover:shadow-xl transition-all">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://randomuser.me/api/portraits/women/32.jpg"
+            alt="student"
+            className="w-14 h-14 rounded-full object-cover mr-4"
+          />
+          <div>
+            <h3 className="font-semibold text-gray-900">Emily Chen</h3>
+            <p className="text-sm text-gray-500">Marketing Intern @ HubSpot</p>
+          </div>
+        </div>
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+          “The verified companies gave me confidence, and I landed 
+          an amazing marketing internship that boosted my career.”
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
       {/* CTA Section */}
       <section className="py-14 sm:py-20 bg-[#1e3a5f] text-white text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

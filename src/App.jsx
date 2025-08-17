@@ -11,6 +11,7 @@ import SignUp from "./components/SignUp"
 import Login from "./components/Login"
 import AboutUs from "./pages/AboutUs"
 import ContactUs from "./pages/ContactUs"
+import NotFound from "./pages/NotFound"
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
           <Route path="/employer-profile" element={<EmployerProfile />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>
