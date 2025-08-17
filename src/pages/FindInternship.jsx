@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Clock, IndianRupee, Filter, X, ChevronDown, Bookmark, Share2, Heart, Star, Calendar, Users, Building2, Briefcase } from 'lucide-react';
+import { 
+  Search, MapPin, Clock, IndianRupee, Filter, Heart, Share2, 
+  Star, Calendar, Users 
+} from 'lucide-react';
 
 const FindInternship = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -158,35 +161,35 @@ const FindInternship = () => {
   };
 
   const InternshipCard = ({ internship }) => (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow duration-300">
-      <div className="flex justify-between items-start mb-4">
+    <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-4">
         <div className="flex items-start space-x-4">
           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
             <span className="text-blue-600 font-semibold text-lg">{internship.logo}</span>
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{internship.title}</h3>
-            <p className="text-gray-600 mb-2">{internship.company}</p>
-            <div className="flex items-center space-x-2 mb-2">
+            <h3 className="text-lg font-semibold text-gray-900">{internship.title}</h3>
+            <p className="text-gray-600">{internship.company}</p>
+            <div className="flex items-center space-x-2 mt-1">
               <Star className="w-4 h-4 text-yellow-400 fill-current" />
-              <span className="text-sm text-gray-600">{internship.rating} ({internship.reviews} reviews)</span>
+              <span className="text-sm text-gray-600">{internship.rating} ({internship.reviews})</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 self-end sm:self-auto">
           <button
             onClick={() => toggleSaveInternship(internship.id)}
-            className={`p-2 rounded-full ${savedInternships.has(internship.id) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} hover:bg-opacity-80 transition-colors`}
+            className={`p-2 rounded-full ${savedInternships.has(internship.id) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} hover:bg-opacity-80`}
           >
             <Heart className={`w-4 h-4 ${savedInternships.has(internship.id) ? 'fill-current' : ''}`} />
           </button>
-          <button className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+          <button className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
             <Share2 className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-4">
         <div className="flex items-center space-x-2">
           <MapPin className="w-4 h-4 text-gray-400" />
           <span className="text-gray-600">{internship.location}</span>
@@ -205,9 +208,9 @@ const FindInternship = () => {
         </div>
       </div>
 
-      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{internship.description}</p>
+      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{internship.description}</p>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-3">
         {internship.tags.map((tag, index) => (
           <span key={index} className="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">
             {tag}
@@ -215,7 +218,7 @@ const FindInternship = () => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center space-x-4 text-sm text-gray-500">
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4" />
@@ -227,7 +230,7 @@ const FindInternship = () => {
             </span>
           )}
         </div>
-        <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md  font-medium">
+        <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
           Apply Now
         </button>
       </div>
@@ -236,23 +239,26 @@ const FindInternship = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
         {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex flex-col lg:flex-row gap-3">
+            {/* Search Input */}
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search internships by title, company, or skills..."
+                  placeholder="Search internships..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
+            {/* Location Input */}
             <div className="lg:w-64">
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -261,10 +267,12 @@ const FindInternship = () => {
                   placeholder="Location"
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
+            {/* Filters Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
@@ -272,120 +280,51 @@ const FindInternship = () => {
               <Filter className="w-5 h-5 mr-2" />
               Filters
             </button>
-            <button className="bg-[#1e3a5f] text-white px-8 py-3 rounded-lg font-medium">
+
+            {/* Search Button */}
+            <button className="bg-[#1e3a5f] text-white px-6 py-3 rounded-lg font-medium w-full lg:w-auto">
               Search
             </button>
           </div>
 
-       
+          {/* Filters */}
           {showFilters && (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {locations.map(location => (
-                      <option key={location} value={location}>{location}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                  <select
-                    value={selectedDuration}
-                    onChange={(e) => setSelectedDuration(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {durations.map(duration => (
-                      <option key={duration} value={duration}>{duration}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Stipend</label>
-                  <select
-                    value={selectedStipend}
-                    onChange={(e) => setSelectedStipend(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {stipendRanges.map(stipend => (
-                      <option key={stipend} value={stipend}>{stipend}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="px-3 py-2 border rounded-md">
+                {categories.map(c => <option key={c}>{c}</option>)}
+              </select>
+              <select value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)} className="px-3 py-2 border rounded-md">
+                {locations.map(l => <option key={l}>{l}</option>)}
+              </select>
+              <select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)} className="px-3 py-2 border rounded-md">
+                {durations.map(d => <option key={d}>{d}</option>)}
+              </select>
+              <select value={selectedStipend} onChange={(e) => setSelectedStipend(e.target.value)} className="px-3 py-2 border rounded-md">
+                {stipendRanges.map(s => <option key={s}>{s}</option>)}
+              </select>
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {filteredInternships.length} Internships Found
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Showing internships based on your preferences
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600">Sort by:</span>
-            <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>Latest</option>
-              <option>Stipend (High to Low)</option>
-              <option>Stipend (Low to High)</option>
-              <option>Duration</option>
-            </select>
-          </div>
+        {/* Results */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+            {filteredInternships.length} Internships Found
+          </h1>
+          <select className="px-3 py-2 border rounded-md">
+            <option>Latest</option>
+            <option>Stipend (High to Low)</option>
+            <option>Stipend (Low to High)</option>
+            <option>Duration</option>
+          </select>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-6">
-          <button className="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm hover:bg-blue-200">
-            Work From Home
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200">
-            Part Time
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200">
-            High Stipend
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200">
-            With Job Offer
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200">
-            Early Applicant
-          </button>
-        </div>
-
+        {/* Internship List */}
         <div className="space-y-4">
           {filteredInternships.map(internship => (
             <InternshipCard key={internship.id} internship={internship} />
           ))}
         </div>
-
-        <div className="flex justify-center items-center space-x-2 mt-8">
-          <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>
-          <button className="px-4 py-2 bg-[#1e3a5f] text-white rounded-md">1</button>
-          <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">2</button>
-          <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">3</button>
-          <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
-        </div>
-
       </div>
     </div>
   );
