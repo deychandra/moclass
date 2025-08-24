@@ -1,14 +1,92 @@
 import React from "react";
+import { useContext } from 'react';
 import { Link } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { LoginSchama } from './Schemas';
+import { userContext } from "../../store";
+import { GoogleOAuthProvider,GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import UserService from "../services/user.service";
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const { userState, dispatch } = useContext(userContext);
+  const navigate = useNavigate();
+    const handleSuccess = async(response) => {
+        console.log('Google login successful', response);
+        try {
+            const userData = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: {
+                    Authorization: `Bearer ${response.credential
+                    }`,
+                },
+            });
+    
+            const userDataJson = await userData.json();
+    
+            // Now userDataJson contains the user data
+            console.log('User data from Google:', userDataJson);
+    
+            // You can handle the user data as needed, for example, send it to the server or update your state
+        } catch (error) {
+            console.error('Error fetching user data from Google', error);
+            // Handle the error (e.g., show an error message to the user)
+        }
+    };
+       const handleError = (error) => {
+        console.error('Google login error', error);
+        // Handle the error (e.g., show an error message to the user)
+    };
+    const dataSubmit = async (data) => {
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Login submitted");
-  };
+        var fdata = new FormData();
+
+        fdata.append("email", data.email);
+        fdata.append("password", data.password);
+        var response = await UserService.login(fdata);
+        console.log(response.data, 'response.data')
+        if (response.data.success) {
+            // setLoader(false);
+            // alert('success')
+
+            // TokenHelper.setToken(response.data.token)
+            dispatch({ type: "token", value: response.data.token });
+            dispatch({ type: "id", value: response.data.id });
+            dispatch({ type: "name", value: response.data.fullName });
+            dispatch({ type: "email", value: response.data.email });
+
+
+         
+
+            toast.success(response.data.message)
+               navigate(`/dashboard`)
+
+        }
+        if (response.data.emailStatus == false) {
+            toast.error(response.data.error)
+            navigate(`/emailotp`, { state: { email: data.email } })
+
+        }
+        else {
+            // setLoader(false);
+            toast.error(response.data.error)
+        }
+
+        console.log(response.data)
+
+    }
+    const { register, handleSubmit, formState: { errors }, watch } = useForm({
+        resolver: yupResolver(LoginSchama),
+        mode: "all"
+    });
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Login submitted");
+  // };
 
   return (
     <div className="min-h-[80vh] sm:min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-4">
@@ -23,16 +101,17 @@ const Login = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(dataSubmit)} className="space-y-4">
           {/* Email */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="email"
               className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
-              placeholder="Email Address"
-              required
+              placeholder="Email Address" {...register("email")}
+              
             />
+             <p style={{ color: 'red' }} className='form-field-error'>{errors.email?.message}</p>
           </div>
 
           {/* Password */}
@@ -41,8 +120,8 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
-              placeholder="Password"
-              required
+              placeholder="Password" {...register("password")}
+              
             />
             <button
               type="button"
@@ -56,6 +135,7 @@ const Login = () => {
                 <Eye className="h-5 w-5" />
               )}
             </button>
+             <p style={{ color: 'red' }} className='form-field-error'>{errors.password?.message}</p>
           </div>
 
           {/* Forgot Password */}
@@ -86,6 +166,11 @@ const Login = () => {
 
         {/* Social Login */}
         <div className="flex justify-center">
+           <GoogleOAuthProvider clientId="723006301948-7ec7qj7gdtdqaa85aoh43l0ou8icjmem.apps.googleusercontent.com" scopes={['profile', 'email']}>
+              <GoogleLogin
+                onSuccess={handleSuccess}
+                onError={handleError}
+            >
           <button className="flex items-center justify-center w-full sm:w-auto p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -96,6 +181,8 @@ const Login = () => {
               Continue with Google
             </span>
           </button>
+          </GoogleLogin>
+          </GoogleOAuthProvider>
         </div>
 
         {/* Register */}
