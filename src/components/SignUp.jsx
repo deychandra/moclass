@@ -1,14 +1,120 @@
-import React from "react";
-import { User, Mail, Lock, Check, Eye, EyeOff } from "lucide-react";
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { RegistrationSchema } from "./Schemas";
+import { userContext } from "../../store";
+import UserService from "../services/user.service";
+import { useNavigate } from "react-router-dom";
+
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+
+import {
+  GoogleOAuthProvider,
+  useGoogleLogin,
+} from "@react-oauth/google";
+
+const GoogleSignUpButton = () => {
+  const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: async (response) => {
+      console.log("Google login successful:", response);
+
+      try {
+        const userData = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${response.access_token}`,
+            },
+          }
+        );
+
+        const userDataJson = await userData.json();
+        console.log("User data from Google:", userDataJson);
+
+        // send Google data to backend
+        const fdata = new FormData();
+        fdata.append("fullName", userDataJson.name);
+        fdata.append("email", userDataJson.email);
+        fdata.append("phoneNumber", ""); // optional
+        fdata.append("password", ""); // not needed for Google
+
+        const res = await UserService.sociallogin(fdata);
+
+        if (res.data.success) {
+          toast.success("Signed up successfully with Google!");
+          navigate("/dashboard"); // redirect after signup
+        } else {
+          toast.error(res.data.error || "Signup failed");
+        }
+      } catch (error) {
+        console.error("Error fetching Google user data", error);
+        toast.error("Google signup failed");
+      }
+    },
+    onError: () => {
+      console.log("Google login failed");
+      toast.error("Google login failed");
+    },
+  });
+
+  return (
+    <button
+      onClick={() => login()}
+      className="flex items-center justify-center p-3 border border-gray-300 rounded-full hover:bg-gray-50 transition"
+    >
+      <img
+        src="https://www.svgrepo.com/show/475656/google-color.svg"
+        alt="Google icon"
+        className="w-5 h-5"
+      />
+      <span className="ml-2">Sign up with Google</span>
+    </button>
+  );
+};
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
+  const { dispatch } = useContext(userContext);
+  const navigate = useNavigate();
+
+  const dataSubmit = async (data) => {
+    try {
+      const fdata = new FormData();
+      fdata.append("fullName", data.fullName);
+      fdata.append("email", data.email);
+      fdata.append("phoneNumber", data.phoneNumber);
+      fdata.append("password", data.password);
+      fdata.append("userType", "student");
+
+      const response = await UserService.signup(fdata);
+      console.log(response.data, "response.data");
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate(`/emailotp`, { state: { email: data.email } });
+      } else {
+        toast.error(response.data.error);
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      toast.error("Something went wrong");
+    }
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(RegistrationSchema),
+    mode: "all",
+  });
 
   return (
     <div className="min-h-[80vh] sm:min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-4">
@@ -19,7 +125,8 @@ const SignUp = () => {
           <p className="text-gray-600">Join us today and get started</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(dataSubmit)} className="space-y-4">
+          {/* Email */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Mail className="h-5 w-5 text-gray-400" />
@@ -28,10 +135,43 @@ const SignUp = () => {
               type="email"
               className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               placeholder="Email Address"
-              required
+              {...register("email")}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
-
+ {/* FULLNAME */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              placeholder="FULLNAME"
+              {...register("fullName")}
+            />
+            {errors.fullName && (
+              <p className="text-red-500 text-sm">{errors.fullName.message}</p>
+            )}
+          </div>
+          {/* PHONE NUMBER */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              placeholder="PHONE NUMBER"
+              {...register("phoneNumber")}
+            />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
+            )}
+          </div>
+          {/* Password */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Lock className="h-5 w-5 text-gray-400" />
@@ -40,7 +180,7 @@ const SignUp = () => {
               type={showPassword ? "text" : "password"}
               className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               placeholder="Password"
-              required
+              {...register("password")}
             />
             <button
               type="button"
@@ -53,14 +193,12 @@ const SignUp = () => {
                 <Eye className="h-5 w-5 text-gray-400" />
               )}
             </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
-          <div className="w-full flex justify-end text-sm mb-2">
-            <a href="#" className="text-blue-600 hover:underline">
-              Forgot password?
-            </a>
-          </div>
-
+          {/* Terms */}
           <div className="flex items-start">
             <div className="flex items-center h-5">
               <input
@@ -95,10 +233,11 @@ const SignUp = () => {
                 : "bg-blue-400 cursor-not-allowed"
             } transition duration-300`}
           >
-            Sign UP
+            Sign Up
           </button>
         </form>
 
+        {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
@@ -110,25 +249,18 @@ const SignUp = () => {
           </div>
         </div>
 
-        <div className="space-y-3">
-          <p className="text-center text-sm font-medium text-gray-700">
-            Quick Sign Up:
-          </p>
-          <div className="flex justify-center">
-            <button className="flex items-center justify-center p-3 border border-gray-300 rounded-full hover:bg-gray-50 transition">
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google icon"
-                className="w-5 h-5"
-              />
-            </button>
-          </div>
+        {/* Google button */}
+        <div className="flex justify-center">
+          <GoogleOAuthProvider clientId="723006301948-7ec7qj7gdtdqaa85aoh43l0ou8icjmem.apps.googleusercontent.com">
+            <GoogleSignUpButton />
+          </GoogleOAuthProvider>
         </div>
 
+        {/* Already have account */}
         <div className="text-center text-sm">
           <span className="text-gray-600">Already have an account?</span>
           <a
-            href="#"
+            href="/login"
             className="font-medium text-blue-600 hover:text-blue-500 ml-1"
           >
             Sign in

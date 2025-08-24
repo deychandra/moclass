@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { ToastContainer } from 'react-toastify';
+import Store from "../store";
 import Home from "./pages/Home"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
@@ -16,6 +18,18 @@ import NotFound from "./pages/NotFound"
 function App() {
   return (
     <>
+     <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+      />
+    <Store>
       <BrowserRouter>
       <Header />
         <Routes>
@@ -33,6 +47,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
+    </Store>
     </>
   )
 }

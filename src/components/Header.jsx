@@ -1,11 +1,23 @@
 import React, { useState } from "react";
+import { useContext } from 'react';
+import { userContext } from '../../store';
 import Logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // hamburger and close icons
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+const { user, dispatch } = useContext(userContext);
+console.log(user,'user')
+ const Logout = () => {
+        localStorage.clear();
+        dispatch({ type: "reset", valuse: "" });
+        // localStorage.clear(); 
+        // setIsLoggedIn(true);
+        navigate('/')
+        window.location.reload();
+        toast.success("Logout Successfully")
+    };
   return (
     <>
       <header className="bg-white shadow-sm  w-full ">
@@ -46,18 +58,24 @@ const Header = () => {
 
             {/* Desktop Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link
+             {!user&& <Link
                 to="/login"
                 className="text-[#1e3a5f] hover:text-blue-800 font-medium"
               >
                 Login
-              </Link>
-              <Link
+              </Link>}
+               {!user&&<Link
                 to="/register"
                 className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Register
-              </Link>
+              </Link>}
+              {user&& <Link onClick={Logout}
+                to="/register"
+                className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Logout
+              </Link>}
             </div>
 
             {/* Mobile Hamburger */}
