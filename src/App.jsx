@@ -14,6 +14,9 @@ import Login from "./components/Login"
 import AboutUs from "./pages/AboutUs"
 import ContactUs from "./pages/ContactUs"
 import NotFound from "./pages/NotFound"
+import OtpGenerator from "./components/OtpGenerator";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -41,8 +44,11 @@ function App() {
           <Route path="/post-internship" element={<PostInternship />} />
           <Route path="/find-internships" element={<FindInternship />} />
           <Route path="/employer-profile" element={<EmployerProfile />} />
+          <Route path="/otp-generator" element={<OtpGenerator />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
