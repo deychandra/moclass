@@ -45,8 +45,12 @@ const GoogleSignUpButton = () => {
         const res = await UserService.sociallogin(fdata);
 
         if (res.data.success) {
-          toast.success("Signed up successfully with Google!");
-          navigate("/dashboard"); // redirect after signup
+           dispatch({ type: "token", value: userDataJson.access_token });
+          dispatch({ type: "id", value: res.data.id });
+          dispatch({ type: "name", value: res.data.fullName });
+          dispatch({ type: "email", value: res.data.email });
+          toast.success("Signed up successfully with Google!")
+          navigate(`/dashboard`)
         } else {
           toast.error(res.data.error || "Signup failed");
         }
@@ -97,7 +101,7 @@ const SignUp = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-        navigate(`/emailotp`, { state: { email: data.email } });
+        navigate(`/otp-generator`, { state: { email: data.email } });
       } else {
         toast.error(response.data.error);
       }

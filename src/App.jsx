@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { ToastContainer } from 'react-toastify';
 import Store from "../store";
+import { LoginAuth } from "./components/LoginAuth.jsx";
+import { LogoutAuth } from "./components/LogoutAuth.jsx";
 import Home from "./pages/Home"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
@@ -41,14 +43,14 @@ function App() {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
-          <Route path="/post-internship" element={<PostInternship />} />
+          <Route path="/post-internship" element={<LogoutAuth><PostInternship /></LogoutAuth>} />
           <Route path="/find-internships" element={<FindInternship />} />
           <Route path="/employer-profile" element={<EmployerProfile />} />
           <Route path="/otp-generator" element={<OtpGenerator />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/signup" element={<LogoutAuth><SignUp /></LogoutAuth>} />
+          <Route path="/login" element={<LogoutAuth><Login /></LogoutAuth>} />
+          <Route path="/forgot-password" element={<LogoutAuth><ForgotPassword /></LogoutAuth>} />
+          <Route path="/reset-password" element={<LogoutAuth><ResetPassword /></LogoutAuth>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

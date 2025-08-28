@@ -47,7 +47,7 @@ class UserService {
     });
   }
   async forgetpassword(data) {
-    return axios.post(REACT_APP_API_SERVICE_URL + '/emailconfirm', data, {
+    return axios.post(REACT_APP_API_SERVICE_URL + '/auth/emailconfirm', data, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -61,7 +61,7 @@ class UserService {
     });
   }
   async otpverify(data) {
-    return axios.post(REACT_APP_API_SERVICE_URL + '/otpverify', data, {
+    return axios.post(REACT_APP_API_SERVICE_URL + '/auth/otpverify', data, {
       headers: {
         "Content-Type": "application/json"
       },

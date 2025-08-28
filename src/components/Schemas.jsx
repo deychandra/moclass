@@ -91,6 +91,51 @@ export const RegistrationSchema = yup.object().shape({
 
 })
 
+export const EmployeeRegistrationSchema = yup.object().shape({
+  firstName: yup.string().required("First Name Required"),
+  lastName: yup.string().required("Last Name Required"),
+  phoneNumber: yup.string().matches(phoneRegExps, 'Phone number is not valid'),
+  email: yup.string().email().required("email required"),
+  password: yup.string().min(10).required(),
+//   confirmPassword: yup.string().min(10).required().oneOf([yup.ref("password")], "confirm password not match"),
+
+})
+export const EmployerStep1Schema = yup.object().shape({
+  firstName: yup.string().required("First name required"),
+  lastName: yup.string().required("Last name required"),
+  email: yup.string().email("Invalid email").required("Email required"),
+  designation: yup.string().required("Designation required"),
+  phoneNumber: yup
+    .string()
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .required("Phone number required"),
+});
+export const EmployerStep2Schema = yup.object().shape({
+  organizationName: yup.string().required("Organization name required"),
+  organizationCity: yup.string().required("City required"),
+  industry: yup.string().required("Industry required"),
+  numberOfEmployees: yup.string().required("Number of employees required"),
+  organizationDescription: yup
+    .string()
+    .min(20, "Description must be at least 20 characters")
+    .required("Description required"),
+});
+export const EmployerStep3Schema = yup.object().shape({
+  opportunityType: yup.string().required("Select opportunity type"),
+  title: yup.string().required("Job/Internship title required"),
+  skillsRequired: yup.string().required("Skills required"),
+  jobType: yup.string().required("Select job type"),
+  partFullTime: yup.string().required("Select part/full time"),
+  numberOfOpenings: yup
+    .number()
+    .typeError("Must be a number")
+    .positive("Must be positive")
+    .required("Number of openings required"),
+  description: yup
+    .string()
+    .min(50, "Description must be at least 50 characters")
+    .required("Description required"),
+});
 
 function getExtension(path) {
 

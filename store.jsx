@@ -6,6 +6,7 @@ const InitialState = {
     name: getFromLocal("name", ""),
     email: getFromLocal("email", ""),
     token: getFromLocal("token", ""),
+    userType: getFromLocal("userType", ""),
 
 
 };
@@ -26,6 +27,14 @@ function reducer(state, action) {
                 ...state,
                 token: action.value,
             };
+        case "userType":
+            var local_value = JSON.stringify(action.value);
+            localStorage.setItem("userType", local_value)
+            return {
+                ...state,
+                name: action.value,
+            };
+
         case "name":
             var local_value = JSON.stringify(action.value);
             localStorage.setItem("name", local_value)
@@ -52,6 +61,7 @@ function reducer(state, action) {
                 name: getFromLocal("name", ""),
                 email: getFromLocal("email", ""),
                 token: getFromLocal("token", ""),
+                userType: getFromLocal("userType", ""),
             };
 
         default:

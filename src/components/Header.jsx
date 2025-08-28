@@ -58,19 +58,19 @@ console.log(user,'user')
 
             {/* Desktop Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-             {!user&& <Link
+             {!user.token&& <Link
                 to="/login"
                 className="text-[#1e3a5f] hover:text-blue-800 font-medium"
               >
                 Login
               </Link>}
-               {!user&&<Link
+               {!user.token&&<Link
                 to="/register"
                 className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Register
               </Link>}
-              {user&& <Link onClick={Logout}
+              {user.token&& <Link onClick={Logout}
                 to="/register"
                 className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
               >

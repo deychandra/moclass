@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import { useContext } from 'react';
+import { userContext } from '../../store';
 import JobTabs from "./jobsData";
 import { Link } from "react-router-dom";
 import { Calendar, CheckCircle, User } from "lucide-react";
 
 const Home = () => {
+  const { user, dispatch } = useContext(userContext);
+  console.log(user,'user')
+  
   return (
     <>
       {/* Hero Section */}
@@ -29,18 +34,18 @@ const Home = () => {
                 available across various domains.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-start">
-                <Link
+               {user.userType !== "employee" && ( <Link
                   to="/find-internships"
                   className="bg-[#1e3a5f] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-blue-900 transition-all transform hover:scale-105 w-full sm:w-auto text-center"
                 >
                   Find Internships
-                </Link>
-                <Link
-                  to="/post-internship"
+                </Link>)}
+               {user.userType !== "student" && ( <Link
+                  to="/employer-profile"
                   className="border-2 border-[#1e3a5f] text-[#1e3a5f] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all w-full sm:w-auto text-center"
                 >
                   Post Internship
-                </Link>
+                </Link>)}
               </div>
             </div>
 
