@@ -54,6 +54,7 @@ const Login = () => {
             // alert('success')
 
             // TokenHelper.setToken(response.data.token)
+            dispatch({ type: "userType", value: response.data.userType });
             dispatch({ type: "token", value: response.data.token });
             dispatch({ type: "id", value: response.data.id });
             dispatch({ type: "name", value: response.data.fullName });

@@ -1,4 +1,4 @@
-import TokenHelper from "../Pages/TokenHelper";
+import TokenHelper from "./TokenHelper";
 import { Navigate, useLocation } from "react-router-dom";
 import React from "react";
 
