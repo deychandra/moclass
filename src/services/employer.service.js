@@ -32,11 +32,31 @@ class EmployerService {
   async saveOrganization(data) {
     return axios.post(REACT_APP_API_SERVICE_URL + '/employer/organization', data, {
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'multipart/form-data'
       },
     });
   }
-
+  async getPostList(data) {
+    return axios.get(REACT_APP_API_SERVICE_URL + '/employer/postlist', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+  }
+   async getPostById(id) {
+    return axios.get(REACT_APP_API_SERVICE_URL + `/employer/post/${id}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+  }
+   async getPostByEmpId(employerId) {
+    return axios.get(REACT_APP_API_SERVICE_URL + '/employer/postlist'+employerId, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+  }
   async createPosting(data) {
     return axios.post(REACT_APP_API_SERVICE_URL + '/employer/posting', data, {
       headers: {
