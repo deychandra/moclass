@@ -20,6 +20,7 @@ import OtpGenerator from "./components/OtpGenerator";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import FindInternship from "./pages/FindInternship.jsx";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/post-internship" element={<LogoutAuth><PostInternship /></LogoutAuth>} />
           <Route path="/find-internship" element={<FindInternships />} />
