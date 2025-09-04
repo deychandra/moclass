@@ -9,7 +9,7 @@ import Footer from "./components/Footer"
 import Register from "./components/Register"
 import JobDetails from "./pages/JobDetails"
 import PostInternship from "./pages/PostInternship"
-import FindInternship from "./pages/FindInternship"
+import FindInternships from "./pages/FindInternships.jsx"
 import EmployerProfile from "./pages/EmployerProfile"
 import SignUp from "./components/SignUp"
 import Login from "./components/Login"
@@ -19,6 +19,8 @@ import NotFound from "./pages/NotFound"
 import OtpGenerator from "./components/OtpGenerator";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import FindInternship from "./pages/FindInternship.jsx";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -42,8 +44,10 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/post-internship" element={<LogoutAuth><PostInternship /></LogoutAuth>} />
+          <Route path="/find-internship" element={<FindInternships />} />
           <Route path="/find-internships" element={<FindInternship />} />
           <Route path="/employer-profile" element={<EmployerProfile />} />
           <Route path="/otp-generator" element={<OtpGenerator />} />

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
+import { useContext } from 'react';
 import { userContext } from '../../store';
 import { Link } from "react-router-dom";
-import EmployerService from "../services/employer.service";
+
 import { 
   Search, MapPin, Clock, IndianRupee, Filter, Heart, Share2, 
   Star, Calendar, Users 
@@ -17,83 +18,6 @@ const FindInternship = () => {
   const [selectedStipend, setSelectedStipend] = useState('All');
   const [savedInternships, setSavedInternships] = useState(new Set());
 
-  const [internships, setInternships] = useState([]); // ✅ dynamic internships
-  const [loading, setLoading] = useState(true);
-
-  // Fetch internships dynamically from backend
- useEffect(() => {
-  const fetchInternships = async () => {
-    try {
-      const res = await EmployerService.getPostList();
-      console.log(res.data.data, "res");
-
-      // if (res.data.success && Array.isArray(res.data.data)) {
-      //   // Flatten employer postings into internships
-      //   const posts = res.data.data.flatMap(emp => {
-      //     console.log(emp, "emp"); // will log employer object
-      //     return (emp.postings || []).map(post => ({
-      //       id: post._id,
-      //       title: post.title,
-      //       company: emp.organizationName || `${emp.firstName} ${emp.lastName}`,
-      //       logo: emp.organizationLogo
-      //         ? emp.organizationLogo.slice(0, 2).toUpperCase()
-      //         : "IN",
-      //       location: post.jobType || "Work From Home",
-      //       stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
-      //       duration: post.partFullTime || "Flexible",
-      //       startDate: "Immediately",
-      //       applicants: Math.floor(Math.random() * 200), // mock
-      //       tags: (post.skillsRequired || "").split(",").filter(Boolean),
-      //       isActive: true,
-      //       rating: 4.2, // mock value
-      //       reviews: 50, // mock value
-      //       description: post.description || "",
-      //       requirements: [],
-      //       perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
-      //     }));
-      //   });
-
-      //   console.log(posts, "posts after mapping");
-      //   setInternships(posts);
-      // }
-      if (res.data.success && Array.isArray(res.data.data)) {
-        const posts = res.data.data.map(post => ({
-          id: post._id,
-          title: post.title,
-          company: post.employer?.organizationName || 
-                  `${post.employer?.firstName || ""} ${post.employer?.lastName || ""}`.trim(),
-          logo: post.employer?.organizationLogo
-            ? post.employer.organizationLogo.slice(0, 2).toUpperCase()
-            : "IN",
-          location: post.jobType || "Work From Home",
-          stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
-          duration: post.partFullTime || "Flexible",
-          startDate: "Immediately",
-          applicants: Math.floor(Math.random() * 200), // mock
-          tags: (post.skillsRequired || "").split(",").filter(Boolean),
-          isActive: true,
-          rating: 4.2, // mock
-          reviews: 50, // mock
-          description: post.description || "",
-          requirements: [],
-          perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
-        }));
-
-        console.log(posts, "posts after mapping");
-        setInternships(posts);
-      }
-
-    } catch (error) {
-      console.error("Error fetching internships:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchInternships();
-}, []);
-
-console.log(internships,'internships')
   const categories = [
     'All', 'Web Development', 'Mobile App Development', 'Data Science', 
     'Digital Marketing', 'Graphic Design', 'Content Writing', 'UI/UX Design',
@@ -107,6 +31,117 @@ console.log(internships,'internships')
 
   const durations = ['All', '1 Month', '2 Months', '3 Months', '4 Months', '5 Months', '6 Months'];
   const stipendRanges = ['All', 'Unpaid', '< ₹5,000', '₹5,000 - ₹10,000', '₹10,000 - ₹20,000', '₹20,000+'];
+
+  const internships = [
+    {
+      id: 1,
+      title: 'Frontend Developer',
+      company: 'TechCorp Solutions',
+      logo: 'TC',
+      location: 'Work From Home',
+      stipend: '₹15,000',
+      duration: '3 Months',
+      startDate: 'Immediately',
+      applicants: 156,
+      tags: ['React', 'JavaScript', 'CSS'],
+      isActive: true,
+      rating: 4.5,
+      reviews: 234,
+      description: 'Work on exciting web applications and gain hands-on experience with modern frontend technologies.',
+      requirements: ['React.js', 'JavaScript ES6+', 'HTML/CSS', 'Git'],
+      perks: ['Certificate', 'Letter of Recommendation', 'Flexible hours']
+    },
+    {
+      id: 2,
+      title: 'Digital Marketing Intern',
+      company: 'MarketGuru Inc',
+      logo: 'MG',
+      location: 'Mumbai',
+      stipend: '₹12,000',
+      duration: '2 Months',
+      startDate: '15 Jan 2025',
+      applicants: 89,
+      tags: ['SEO', 'Social Media', 'Analytics'],
+      isActive: true,
+      rating: 4.2,
+      reviews: 156,
+      description: 'Learn digital marketing strategies and work on real campaigns for top brands.',
+      requirements: ['Basic marketing knowledge', 'Social media savvy', 'Google Analytics'],
+      perks: ['Certificate', 'Performance bonus', 'Mentorship']
+    },
+    {
+      id: 3,
+      title: 'Data Science Intern',
+      company: 'DataMinds Analytics',
+      logo: 'DA',
+      location: 'Bangalore',
+      stipend: '₹25,000',
+      duration: '6 Months',
+      startDate: '1 Feb 2025',
+      applicants: 234,
+      tags: ['Python', 'Machine Learning', 'SQL'],
+      isActive: true,
+      rating: 4.7,
+      reviews: 89,
+      description: 'Work on cutting-edge ML projects and gain experience with real-world data problems.',
+      requirements: ['Python', 'Statistics', 'SQL', 'Machine Learning basics'],
+      perks: ['Certificate', 'Job opportunity', 'Industry projects']
+    },
+    {
+      id: 4,
+      title: 'UI/UX Design Intern',
+      company: 'DesignStudio Pro',
+      logo: 'DS',
+      location: 'Work From Home',
+      stipend: '₹8,000',
+      duration: '4 Months',
+      startDate: 'Immediately',
+      applicants: 67,
+      tags: ['Figma', 'Adobe XD', 'Prototyping'],
+      isActive: true,
+      rating: 4.3,
+      reviews: 123,
+      description: 'Design beautiful user interfaces and improve user experience for mobile and web applications.',
+      requirements: ['Figma', 'Design thinking', 'User research', 'Prototyping'],
+      perks: ['Certificate', 'Portfolio building', 'Design tools access']
+    },
+    {
+      id: 5,
+      title: 'Business Development Associate',
+      company: 'GrowthVentures Ltd',
+      logo: 'GV',
+      location: 'Delhi',
+      stipend: '₹18,000',
+      duration: '3 Months',
+      startDate: '20 Jan 2025',
+      applicants: 123,
+      tags: ['Sales', 'Communication', 'CRM'],
+      isActive: true,
+      rating: 4.1,
+      reviews: 67,
+      description: 'Drive business growth through strategic partnerships and client relationships.',
+      requirements: ['Communication skills', 'Sales aptitude', 'MS Office', 'CRM knowledge'],
+      perks: ['Certificate', 'Commission bonus', 'Client exposure']
+    },
+    {
+      id: 6,
+      title: 'Content Writing Intern',
+      company: 'ContentCrafters',
+      logo: 'CC',
+      location: 'Work From Home',
+      stipend: '₹10,000',
+      duration: '2 Months',
+      startDate: 'Immediately',
+      applicants: 45,
+      tags: ['Writing', 'SEO', 'Research'],
+      isActive: true,
+      rating: 4.4,
+      reviews: 91,
+      description: 'Create engaging content for websites, blogs, and social media platforms.',
+      requirements: ['Excellent writing skills', 'SEO knowledge', 'Research abilities', 'WordPress'],
+      perks: ['Certificate', 'Published articles', 'Writing portfolio']
+    }
+  ];
 
   const filteredInternships = internships.filter(internship => {
     const matchesSearch = internship.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -128,7 +163,7 @@ console.log(internships,'internships')
     }
     setSavedInternships(newSaved);
   };
-console.log(filteredInternships,'internship')
+
   const InternshipCard = ({ internship }) => (
     <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
       <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-4">
@@ -199,11 +234,8 @@ console.log(filteredInternships,'internship')
             </span>
           )}
         </div>
-        {/* <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
-          Apply Now
-        </button> */}
         <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
-          <Link to={`/jobs/${internship.id}`}>Apply Now</Link>
+          Apply Now
         </button>
       </div>
     </div>
@@ -281,7 +313,7 @@ console.log(filteredInternships,'internship')
         {/* Results */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-            {loading ? "Loading..." : `${filteredInternships.length} Internships Found`}
+            {filteredInternships.length} Internships Found
           </h1>
           <select className="px-3 py-2 border rounded-md">
             <option>Latest</option>
@@ -293,7 +325,7 @@ console.log(filteredInternships,'internship')
 
         {/* Internship List */}
         <div className="space-y-4">
-          {!loading && filteredInternships.map(internship => (
+          {filteredInternships.map(internship => (
             <InternshipCard key={internship.id} internship={internship} />
           ))}
         </div>

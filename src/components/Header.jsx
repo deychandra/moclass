@@ -37,7 +37,7 @@ console.log(user,'user')
             {/* Desktop Nav */}
             <nav className="hidden md:flex space-x-8">
               <Link
-                to="/internships"
+                to="/find-internships"
                 className="text-gray-700 hover:text-[#1e3a5f] transition-colors"
               >
                 Internships

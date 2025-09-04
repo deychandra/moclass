@@ -64,7 +64,7 @@ const Login = () => {
          
 
             toast.success(response.data.message)
-               navigate(`/dashboard`)
+               navigate(`/`)
 
         }
         if (response.data.emailStatus == false) {

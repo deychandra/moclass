@@ -181,7 +181,18 @@ const Step1 = ({ formData, handleInputChange, showOtp, setShowOtp, handleSavePer
 /* ===========================
    Step 2 (HOISTED)
 =========================== */
-const Step2 = ({ formData, handleInputChange, goPrev, handleSaveOrganization }) => (
+const Step2 = ({ 
+  formData, 
+  handleInputChange, 
+  goPrev, 
+  handleSaveOrganization,
+  organizationLogo, 
+  setOrganizationLogo, 
+  verificationDoc, 
+  setVerificationDoc, 
+  noDocuments, 
+  setNoDocuments 
+}) => (
   <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border p-6">
     <h2 className="text-2xl font-semibold text-gray-800 mb-8 text-center">Organization details</h2>
     <div className="space-y-6">
@@ -247,7 +258,17 @@ const Step2 = ({ formData, handleInputChange, goPrev, handleSaveOrganization }) 
         </label>
         <div className="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center">
           <Upload className="mx-auto h-12 w-12 text-blue-400 mb-4" />
-          <button className="text-blue-600 hover:text-blue-700 font-medium">Upload logo</button>
+          <input
+            type="file"
+            id="organizationLogo"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/bmp"
+            onChange={(e) => setOrganizationLogo(e.target.files[0])}
+            className="hidden"
+          />
+          <label htmlFor="organizationLogo" className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
+            Upload logo
+          </label>
+          {organizationLogo && <p className="text-sm text-green-600 mt-2">{organizationLogo.name}</p>}
           <p className="text-sm text-gray-500 mt-2">
             Max file size: 1Mb and max resolution: 500px x 500px. File type: jpeg, jpg, png, gif, bmp
           </p>
@@ -279,16 +300,33 @@ const Step2 = ({ formData, handleInputChange, goPrev, handleSaveOrganization }) 
             <a href="#" className="text-blue-600">here</a>
           </p>
           <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center">
-            <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center mx-auto">
+            <input
+              type="file"
+              id="verificationDoc"
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              onChange={(e) => setVerificationDoc(e.target.files[0])}
+              className="hidden"
+              disabled={noDocuments}
+            />
+            <label 
+              htmlFor="verificationDoc" 
+              className={`text-blue-600 hover:text-blue-700 font-medium flex items-center mx-auto ${noDocuments ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+            >
               <Upload size={16} className="mr-2" />
               Upload file
-            </button>
+            </label>
+            {verificationDoc && <p className="text-sm text-green-600 mt-2">{verificationDoc.name}</p>}
           </div>
         </div>
 
         <div>
           <label className="flex items-center">
-            <input type="checkbox" className="mr-3 h-4 w-4 text-blue-600" />
+            <input 
+              type="checkbox" 
+              checked={noDocuments} 
+              onChange={(e) => setNoDocuments(e.target.checked)}
+              className="mr-3 h-4 w-4 text-blue-600" 
+            />
             <span className="text-sm text-gray-600">I do not have required documents</span>
           </label>
         </div>
@@ -1033,6 +1071,9 @@ export default function EmployerProfile() {
   const [showOtp, setShowOtp] = useState(false);
   const [employerId, setEmployerId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [organizationLogo, setOrganizationLogo] = useState(null);
+  const [verificationDoc, setVerificationDoc] = useState(null);
+  const [noDocuments, setNoDocuments] = useState(false);
 
   const [formData, setFormData] = useState(getInitialFormData);
 
@@ -1125,15 +1166,24 @@ export default function EmployerProfile() {
     }
 
     try {
-      await EmployerService.saveOrganization({
-        employerId,
-        organizationName: formData.organizationName,
-        isIndependent: formData.isIndependent,
-        organizationDescription: formData.organizationDescription,
-        organizationCity: formData.organizationCity,
-        industry: formData.industry,
-        numberOfEmployees: formData.numberOfEmployees,
-      });
+      const formDataToSend = new FormData();
+      formDataToSend.append("employerId", employerId);
+      formDataToSend.append("organizationName", formData.organizationName);
+      formDataToSend.append("isIndependent", formData.isIndependent);
+      formDataToSend.append("organizationDescription", formData.organizationDescription);
+      formDataToSend.append("organizationCity", formData.organizationCity);
+      formDataToSend.append("industry", formData.industry);
+      formDataToSend.append("numberOfEmployees", formData.numberOfEmployees);
+      formDataToSend.append("noDocuments", noDocuments);
+      
+      if (organizationLogo) {
+        formDataToSend.append("organizationLogo", organizationLogo);
+      }
+      if (verificationDoc && !noDocuments) {
+        formDataToSend.append("verificationDoc", verificationDoc);
+      }
+
+      await EmployerService.saveOrganization(formDataToSend);
       toast.success("Organization details saved!");
       goNext();
     } catch (err) {
@@ -1149,22 +1199,25 @@ export default function EmployerProfile() {
     }
 
     try {
+      // Convert perks object to JSON string for proper transmission
+      const perksString = JSON.stringify(formData.perks);
+      
       await EmployerService.createPosting({
         employerId,
         opportunityType: formData.opportunityType,
-        title: formData.jobTitle,
+        jobTitle: formData.jobTitle,
         minExperience: formData.minExperience,
         skillsRequired: formData.skillsRequired,
         jobType: formData.jobType,
         partFullTime: formData.partFullTime,
         numberOfOpenings: formData.numberOfOpenings,
-        description: formData.jobDescription,
+        jobDescription: formData.jobDescription,
         additionalPreferences: formData.additionalPreferences,
         fixedPayMin: formData.fixedPayMin,
         fixedPayMax: formData.fixedPayMax,
         variablePayMin: formData.variablePayMin,
         variablePayMax: formData.variablePayMax,
-        perks: formData.perks,
+        perks: perksString,
         availabilityQuestion: formData.availabilityQuestion,
         alternateNumber: formData.alternateNumber,
       });
@@ -1199,6 +1252,12 @@ export default function EmployerProfile() {
             handleInputChange={handleInputChange}
             goPrev={goPrev}
             handleSaveOrganization={handleSaveOrganization}
+            organizationLogo={organizationLogo}
+            setOrganizationLogo={setOrganizationLogo}
+            verificationDoc={verificationDoc}
+            setVerificationDoc={setVerificationDoc}
+            noDocuments={noDocuments}
+            setNoDocuments={setNoDocuments}
           />
         )}
         {currentStep === 3 && (

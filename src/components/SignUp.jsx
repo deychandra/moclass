@@ -17,7 +17,7 @@ import {
 
 const GoogleSignUpButton = () => {
   const navigate = useNavigate();
-
+ const { userState, dispatch } = useContext(userContext);
   const login = useGoogleLogin({
     onSuccess: async (response) => {
       console.log("Google login successful:", response);
@@ -50,7 +50,7 @@ const GoogleSignUpButton = () => {
           dispatch({ type: "name", value: res.data.fullName });
           dispatch({ type: "email", value: res.data.email });
           toast.success("Signed up successfully with Google!")
-          navigate(`/dashboard`)
+          navigate(`/`)
         } else {
           toast.error(res.data.error || "Signup failed");
         }
@@ -84,7 +84,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
-  const { dispatch } = useContext(userContext);
+ 
   const navigate = useNavigate();
 
   const dataSubmit = async (data) => {
