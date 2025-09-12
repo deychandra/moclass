@@ -22,6 +22,7 @@ import ResetPassword from "./components/ResetPassword";
 import FindInternship from "./pages/FindInternship.jsx";
 import Dashboard from "./pages/Dashboard";
 import JobList from "./pages/JobList.jsx";
+import ResumeBuilder from "./pages/ResumeBuilder.jsx";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/resumebuilder" element={<ResumeBuilder />} />
           <Route path="/post-internship" element={<LogoutAuth><PostInternship /></LogoutAuth>} />
           <Route path="/find-internship" element={<FindInternships />} />
           <Route path="/find-internships" element={<FindInternship />} />
