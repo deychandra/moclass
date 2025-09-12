@@ -76,6 +76,13 @@ console.log(user,'user')
               >
                 Logout
               </Link>}
+               {user.token&&<Link 
+                to="/dashboard"
+                className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Dashboard
+              </Link>
+              }
             </div>
 
             {/* Mobile Hamburger */}

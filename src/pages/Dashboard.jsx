@@ -1,158 +1,111 @@
-// ManageJobsTabs.jsx
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { userContext } from "../../store";
+import { Link } from "react-router-dom";
 import {
-  MoreVertical,
-  Eye,
-  ArrowLeft,
-  ArrowRight,
+  Briefcase,
+  Calendar,
+  Bookmark,
+  User,
+  FileText,
   PlusCircle,
-  UploadCloud,
 } from "lucide-react";
 
-
-
-const sampleData = [
-  {
-    id: 1,
-    title: "Associate Software Developer",
-    status: "Under review",
-    views: 42,
-    action: "Upgrade",
-  },
-  // add more rows as needed
-];
-
-const StatusPill = ({ status }) => {
-  const base =
-    "inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold";
-  if (status === "Under review") return <span className={`${base} bg-blue-50 text-blue-700`}>{status}</span>;
-  if (status === "Active") return <span className={`${base} bg-green-50 text-green-700`}>{status}</span>;
-  if (status === "Closed") return <span className={`${base} bg-rose-50 text-rose-700`}>{status}</span>;
-  return <span className={`${base} bg-gray-50 text-gray-700`}>{status}</span>;
-};
-
-export default function ManageJobsTabs() {
-  const [tab, setTab] = useState("jobs"); 
-  const [rows] = useState(sampleData);
+const Dashboard = () => {
+  const { user } = useContext(userContext);
 
   return (
-    <div className="space-y-6">
-   
-      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-700">
-        <div className="max-w-5xl mx-auto flex items-start gap-3">
-          <div className="flex-1">
-            Post unlimited listings and get access to features like boosted visibility,
-            applicant contact numbers, etc., with Internshala Premium.
-            <a className="font-semibold underline ml-1" href="#upgrade"> View Premium Plans now</a>
-          </div>
-          <div className="text-sm text-blue-600 font-medium">?</div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="border-b">
-            <nav className="flex -mb-px space-x-6">
-              <button
-                onClick={() => setTab("internships")}
-                className={`pb-3 pt-4 text-sm font-medium ${
-                  tab === "internships"
-                    ? "text-sky-600 border-b-2 border-sky-500"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#1e3a5f] text-white flex flex-col p-6">
+        <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
+        <nav className="space-y-4">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
+          >
+            <User className="w-5 h-5" /> Profile
+          </Link>
+          {user.userType === "student" && (
+            <>
+              <Link
+                to="/dashboard/applications"
+                className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
               >
-                Internships
-              </button>
-              <button
-                onClick={() => setTab("jobs")}
-                className={`pb-3 pt-4 text-sm font-medium ${
-                  tab === "jobs"
-                    ? "text-sky-600 border-b-2 border-sky-500"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
+                <FileText className="w-5 h-5" /> My Applications
+              </Link>
+              <Link
+                to="/dashboard/saved"
+                className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
               >
-                Jobs
-              </button>
-            </nav>
+                <Bookmark className="w-5 h-5" /> Saved Jobs
+              </Link>
+            </>
+          )}
+          {user.userType === "employee" && (
+            <>
+              <Link
+                to="/employer-profile"
+                className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
+              >
+                <PlusCircle className="w-5 h-5" /> Post a Job
+              </Link>
+              <Link
+                to="/dashboard/manage-jobs"
+                className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
+              >
+                <Briefcase className="w-5 h-5" /> Manage Jobs
+              </Link>
+            </>
+          )}
+          <Link
+            to="/dashboard/interviews"
+            className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
+          >
+            <Calendar className="w-5 h-5" /> Interviews
+          </Link>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+          Welcome back, {user.name || "User"} 👋
+        </h1>
+
+        {/* Stats Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-500 text-sm">Applications</h3>
+            <p className="text-2xl font-bold text-[#1e3a5f]">12</p>
           </div>
-
-         
-          <div className="py-6">
-            <div className="overflow-hidden rounded-md">
-              <div className="grid grid-cols-[1.8fr_1fr_120px_120px_160px_48px] gap-4 items-center text-sm text-gray-500 px-4 py-3 bg-gray-50 border-b">
-                <div className="font-semibold">JOB TITLE</div>
-                <div className="font-semibold">STATUS</div>
-                <div className="font-semibold">TOTAL VIEWS</div>
-                <div className="font-semibold">ACTION</div>
-                <div className="font-semibold">UPGRADE TO PREMIUM</div>
-                <div className="sr-only">menu</div>
-              </div>
-
-             
-              <div className="bg-white">
-                {rows.map((r) => (
-                  <div
-                    key={r.id}
-                    className="grid grid-cols-[1.8fr_1fr_120px_120px_160px_48px] gap-4 items-center px-4 py-6 border-b last:border-b-0"
-                  >
-                    <div className="text-gray-800">{r.title}</div>
-
-                    <div>
-                      <StatusPill status={r.status} />
-                    </div>
-
-                    <div className="text-gray-600">{r.views}</div>
-
-                    <div>
-                    
-                      <button className="text-sm font-semibold text-sky-600 hover:underline inline-flex items-center gap-2">
-                        <PlusCircle className="w-4 h-4" />
-                        Upgrade
-                      </button>
-                    </div>
-
-                    <div className="text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1">
-                          <span className="text-yellow-500">👑</span>
-                          <span className="underline text-sky-600">Upgrade</span>
-                        </span>
-                        <div className="text-xs text-gray-400">(get priority approval)</div>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <button
-                        title="More actions"
-                        className="p-2 rounded-full hover:bg-gray-100"
-                        aria-label="more"
-                      >
-                        <MoreVertical className="w-4 h-4 text-gray-500" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-             
-                {rows.length === 0 && (
-                  <div className="p-8 text-center text-gray-500">No listings yet</div>
-                )}
-              </div>
-            </div>
-
-      
-            <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-500">
-              <button className="p-2 rounded hover:bg-gray-100">
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div className="px-3">1 / 1</div>
-              <button className="p-2 rounded hover:bg-gray-100">
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-500 text-sm">Interviews</h3>
+            <p className="text-2xl font-bold text-[#1e3a5f]">3</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-500 text-sm">Saved Jobs</h3>
+            <p className="text-2xl font-bold text-[#1e3a5f]">5</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-500 text-sm">Profile Views</h3>
+            <p className="text-2xl font-bold text-[#1e3a5f]">89</p>
           </div>
         </div>
-      </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Recent Activity
+          </h2>
+          <ul className="space-y-3 text-gray-700">
+            <li>Application submitted to Google SWE Intern</li>
+            <li>Interview scheduled with Microsoft - Tomorrow 3 PM</li>
+            <li>You saved a job: Product Designer @ Figma</li>
+          </ul>
+        </div>
+      </main>
     </div>
   );
-}
+};
+
+export default Dashboard;
