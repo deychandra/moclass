@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect,useContext } from "react";
 import { User, Building2 as Building, Briefcase, Check, Upload } from "lucide-react";
 import EmployerService from "../services/employer.service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { userContext } from "../../store";
 
 /* ===========================
    Reusable memoized inputs
@@ -36,7 +37,9 @@ const TextArea = React.memo(({ label, value, onChange, placeholder, rows = 4 }) 
 /* ===========================
    Utilities
 =========================== */
+// const { user } = useContext(userContext);
 const getInitialFormData = () => ({
+  userId:"",
   firstName: "",
   lastName: "",
   email: "",
@@ -1066,6 +1069,7 @@ const Step3 = ({
    Main Component
 =========================== */
 export default function EmployerProfile() {
+  const { user } = useContext(userContext);
   const TOTAL_STEPS = 3;
   const [currentStep, setCurrentStep] = useState(1);
   const [showOtp, setShowOtp] = useState(false);
@@ -1094,6 +1098,7 @@ export default function EmployerProfile() {
           if (employerData.stepCompleted > 0) {
             setFormData((prev) => ({
               ...prev,
+              userId: employerData.userId || "",
               firstName: employerData.firstName || "",
               lastName: employerData.lastName || "",
               email: employerData.email || "",
@@ -1137,10 +1142,12 @@ export default function EmployerProfile() {
 
   // API Handlers
   const handleSavePersonal = async () => {
+    console.log(user,'user')
     try {
       const result = await EmployerService.savePersonal({
         firstName: formData.firstName,
         lastName: formData.lastName,
+        userId:user.id,
         email: formData.email,
         designation: formData.designation,
         phoneNumber: formData.phoneNumber,

@@ -44,7 +44,7 @@ const Dashboard = () => {
           {user.userType === "employee" && (
             <>
               <Link
-                to="/dashboard/post-job"
+                to="/employer-profile"
                 className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
               >
                 <PlusCircle className="w-5 h-5" /> Post a Job

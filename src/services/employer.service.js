@@ -50,8 +50,8 @@ class EmployerService {
       },
     });
   }
-   async getPostByEmpId(employerId) {
-    return axios.get(REACT_APP_API_SERVICE_URL + '/employer/postlist'+employerId, data, {
+   async getPostByUserId(userId) {
+    return axios.get(REACT_APP_API_SERVICE_URL + `/employer/postlist/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       },
