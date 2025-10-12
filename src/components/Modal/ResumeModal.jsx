@@ -1,4 +1,3 @@
-
 import React from "react";
 import { X, Plus } from "lucide-react";
 
@@ -139,20 +138,31 @@ export default function ResumeModal({
           )}
 
           {modalSection === "career" && (
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="text-xs text-gray-600">
+            <>
+              <div className="text-center mb-[24px]">
+                <strong className="text-[18px] font-semibold text-[#333]">
+                  {" "}
                   Career objective
-                </label>
-                <textarea
-                  name="text"
-                  value={formData.text || ""}
-                  onChange={onChange}
-                  className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                  rows={5}
-                />
+                </strong>{" "}
+                <span className="text-gray-500 font-normal text-[11px] ml-1">
+                  (Optional)
+                </span>
               </div>
-            </form>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <div>
+                  <label className="font-medium text-[14px] text-[#333] leading-normal">
+                  Add a brief career objective to help employers understand your career aspirations and value you can deliver to their organization.
+                  </label>
+                  <textarea
+                    name="text"
+                    value={formData.text || ""}
+                    onChange={onChange}
+                    className="shadow-none p-[11px] bg-white text-[#484848] border border-[#DDD] rounded-[3px] text-[14px] w-full outline-0 resize-none"
+                    rows={5}
+                  />
+                </div>
+              </form>
+            </>
           )}
         </div>
 
