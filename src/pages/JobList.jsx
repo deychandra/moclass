@@ -68,7 +68,7 @@ export default function ManageJobsTabs() {
         <div className="max-w-5xl mx-auto flex items-start gap-3">
           <div className="flex-1">
             Post unlimited listings and get access to features like boosted
-            visibility, applicant contact numbers, etc., with Internshala
+            visibility, applicant contact numbers, etc., with moclass
             Premium.
             <a className="font-semibold underline ml-1" href="#upgrade">
               {" "}

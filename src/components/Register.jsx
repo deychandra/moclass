@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import GoogleLogo from "../assets/images/google-logo.svg";
+
 const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 space-y-7">
-        
-       
         <div className="text-center space-y-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
             Sign-up and{" "}
@@ -18,28 +18,21 @@ const Register = () => {
             400+ companies hiring on moclass
           </p>
         </div>
-        
-     
+
         <button
           className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 text-base rounded-lg font-medium hover:bg-blue-700 transition shadow mb-3"
           aria-label="Sign up with Google"
         >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google icon"
-            className="w-5 h-5"
-          />
+          <img src={GoogleLogo} alt="Google Logo" width={30} height={30} />
           <span>Sign up with Google</span>
         </button>
-        
-      
+
         <div className="relative flex items-center mb-3">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-400 text-sm bg-white px-2">Or</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
-        
-       
+
         <Link
           to="/signup"
           className="w-full flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition text-gray-800 text-base mb-2 shadow-sm"
@@ -60,8 +53,7 @@ const Register = () => {
           </svg>
           Sign up with Email
         </Link>
-        
-       
+
         <p className="text-xs text-gray-600 text-center">
           By signing up, you agree to our{" "}
           <Link to="/terms" className="text-blue-600 hover:underline">
@@ -69,11 +61,13 @@ const Register = () => {
           </Link>
           .
         </p>
-        
-     
+
         <p className="text-sm text-center mt-2">
           Already registered?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Login
           </Link>
         </p>
