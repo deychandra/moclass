@@ -7,8 +7,8 @@ import {
   Mail,
   Phone,
   MapPin,
-  X,
 } from "lucide-react";
+import ResumeModal from "../components/Modal/ResumeModal";
 
 export default function ResumeBuilder() {
   const [skills, setSkills] = useState([
@@ -50,9 +50,8 @@ export default function ResumeBuilder() {
     },
   ]);
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("add"); // 'add' | 'edit'
+  const [modalMode, setModalMode] = useState("add");
   const [modalSection, setModalSection] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({});
@@ -62,14 +61,12 @@ export default function ResumeBuilder() {
     setModalSection(section);
     setEditingIndex(index);
 
-    // prefill for edit
     if (mode === "edit") {
       if (section === "education") setFormData(educations[index]);
       else if (section === "skill") setFormData({ name: skills[index] });
       else if (section === "experience") setFormData(experience[index]);
       else if (section === "career") setFormData({ text: "" });
     } else {
-      // reset for add
       if (section === "education")
         setFormData({ degree: "", college: "", year: "", cgpa: "" });
       else if (section === "skill") setFormData({ name: "" });
@@ -107,7 +104,7 @@ export default function ResumeBuilder() {
           s.map((it, i) => (i === editingIndex ? formData : it))
         );
     } else if (modalSection === "skill") {
-      if (!formData.name) return; // simple validation
+      if (!formData.name) return;
       if (modalMode === "add") setSkills((s) => [formData.name, ...s]);
       else if (modalMode === "edit")
         setSkills((s) =>
@@ -135,14 +132,12 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto bg-white shadow-sm rounded-md border border-gray-100">
-        {/* Header */}
         <div className="px-8 pt-10 pb-6">
           <h1 className="text-2xl font-semibold text-center text-gray-800">
-            Internshala Resume
+            moclass Resume
           </h1>
         </div>
 
-        {/* Notice */}
         <div className="px-8">
           <div className="bg-yellow-50 border border-yellow-100 rounded-md p-3 text-sm text-yellow-800 flex items-center gap-3">
             <svg
@@ -166,7 +161,6 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* Main content */}
         <div className="px-8 py-8">
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -199,9 +193,7 @@ export default function ResumeBuilder() {
 
           <hr className="my-6 border-t border-gray-200" />
 
-          {/* Sections grid */}
           <div className="space-y-8">
-            {/* Career Objective */}
             <Section label="CAREER OBJECTIVE">
               <div
                 className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
@@ -212,7 +204,6 @@ export default function ResumeBuilder() {
               </div>
             </Section>
 
-            {/* Education */}
             <Section label="EDUCATION">
               <div className="space-y-4">
                 {educations.map((ed, idx) => (
@@ -263,7 +254,6 @@ export default function ResumeBuilder() {
               </div>
             </Section>
 
-            {/* Work Experience */}
             <Section label={`WORK EXPERIENCE (${experience.length} YEAR)`}>
               <div className="space-y-4">
                 {experience.map((exp, i) => (
@@ -326,7 +316,6 @@ export default function ResumeBuilder() {
               </div>
             </Section>
 
-            {/* Skills */}
             <Section label="SKILLS">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white border border-gray-100 rounded-md p-4">
@@ -374,14 +363,14 @@ export default function ResumeBuilder() {
             </Section>
 
             <Section label="PORTFOLIO/ WORK SAMPLES">
-              <div className="text-sm text-blue-600 cursor-pointer hover:underline">
+              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
                 <Plus size={14} />{" "}
                 <span className="ml-2">Add portfolio/ work sample</span>
               </div>
             </Section>
 
             <Section label="ACCOMPLISHMENTS/ ADDITIONAL DETAILS">
-              <div className="text-sm text-blue-600 cursor-pointer hover:underline">
+              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
                 <Plus size={14} />{" "}
                 <span className="ml-2">
                   Add accomplishment/ additional detail
@@ -394,168 +383,15 @@ export default function ResumeBuilder() {
         <div className="h-6" />
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/40" onClick={closeModal} />
-
-          <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full z-10 overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b">
-              <div className="font-medium text-gray-800">
-                {modalMode === "add" ? "Add" : "Edit"} {modalSection}
-              </div>
-              <button
-                className="p-1"
-                onClick={closeModal}
-                aria-label="Close modal"
-              >
-                <X />
-              </button>
-            </div>
-
-            <div className="p-4 max-h-[70vh] overflow-auto">
-              {modalSection === "education" && (
-                <form className="space-y-3">
-                  <div>
-                    <label className="text-xs text-gray-600">Degree</label>
-                    <input
-                      name="degree"
-                      value={formData.degree || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-600">College</label>
-                    <input
-                      name="college"
-                      value={formData.college || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs text-gray-600">Year</label>
-                      <input
-                        name="year"
-                        value={formData.year || ""}
-                        onChange={handleFormChange}
-                        className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-600">CGPA</label>
-                      <input
-                        name="cgpa"
-                        value={formData.cgpa || ""}
-                        onChange={handleFormChange}
-                        className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      />
-                    </div>
-                  </div>
-                </form>
-              )}
-
-              {modalSection === "skill" && (
-                <form className="space-y-3">
-                  <div>
-                    <label className="text-xs text-gray-600">Skill name</label>
-                    <input
-                      name="name"
-                      value={formData.name || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                    />
-                  </div>
-                </form>
-              )}
-
-              {modalSection === "experience" && (
-                <form className="space-y-3">
-                  <div>
-                    <label className="text-xs text-gray-600">Title</label>
-                    <input
-                      name="title"
-                      value={formData.title || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-600">Company</label>
-                    <input
-                      name="company"
-                      value={formData.company || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs text-gray-600">Type</label>
-                      <input
-                        name="type"
-                        value={formData.type || ""}
-                        onChange={handleFormChange}
-                        className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-600">Period</label>
-                      <input
-                        name="period"
-                        value={formData.period || ""}
-                        onChange={handleFormChange}
-                        className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-600">Description</label>
-                    <textarea
-                      name="description"
-                      value={formData.description || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      rows={4}
-                    />
-                  </div>
-                </form>
-              )}
-
-              {modalSection === "career" && (
-                <form>
-                  <div>
-                    <label className="text-xs text-gray-600">
-                      Career objective
-                    </label>
-                    <textarea
-                      name="text"
-                      value={formData.text || ""}
-                      onChange={handleFormChange}
-                      className="w-full mt-1 border rounded px-3 py-2 text-sm"
-                      rows={5}
-                    />
-                  </div>
-                </form>
-              )}
-            </div>
-
-            <div className="flex items-center justify-end gap-3 p-4 border-t">
-              <button className="px-4 py-2 rounded border" onClick={closeModal}>
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-                onClick={saveForm}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ResumeModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        modalMode={modalMode}
+        modalSection={modalSection}
+        formData={formData}
+        onChange={handleFormChange}
+        onSave={saveForm}
+      />
     </div>
   );
 }
