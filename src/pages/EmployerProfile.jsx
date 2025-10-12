@@ -1088,37 +1088,9 @@ export default function EmployerProfile() {
   ];
 
   // Fetch employer data on mount
-  useEffect(() => {
-    const fetchEmployerData = async () => {
-      try {
-        const employerData = await EmployerService.getCurrentEmployer();
-        if (employerData) {
-          setEmployerId(employerData._id || null);
-
-          if (employerData.stepCompleted > 0) {
-            setFormData((prev) => ({
-              ...prev,
-              userId: employerData.userId || "",
-              firstName: employerData.firstName || "",
-              lastName: employerData.lastName || "",
-              email: employerData.email || "",
-              designation: employerData.designation || "",
-              phoneNumber: employerData.phoneNumber || "",
-            }));
-            setCurrentStep(Math.min(TOTAL_STEPS, (employerData.stepCompleted || 0) + 1));
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching employer data:", error);
-        toast.error("Failed to load employer data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEmployerData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+ useEffect(() => {
+  setLoading(false);
+}, []);
 
   const goNext = () => setCurrentStep((s) => Math.min(TOTAL_STEPS, s + 1));
   const goPrev = () => setCurrentStep((s) => Math.max(1, s - 1));

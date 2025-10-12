@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import { userContext } from '../../store';
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import EmployerService from "../services/employer.service";
 import { 
@@ -13,87 +12,60 @@ const FindInternship = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
-  const [selectedDuration, setSelectedDuration] = useState('All');
   const [selectedStipend, setSelectedStipend] = useState('All');
+  const [sortBy, setSortBy] = useState("Latest");
   const [savedInternships, setSavedInternships] = useState(new Set());
 
-  const [internships, setInternships] = useState([]); // ✅ dynamic internships
+  const [internships, setInternships] = useState([]); 
   const [loading, setLoading] = useState(true);
 
-  // Fetch internships dynamically from backend
- useEffect(() => {
-  const fetchInternships = async () => {
-    try {
-      const res = await EmployerService.getPostList();
-      console.log(res.data.data, "res");
+  // ✅ Fetch internships dynamically
+  useEffect(() => {
+    const fetchInternships = async () => {
+      try {
+        const res = await EmployerService.getPostList({
+          search: searchQuery,
+          location: selectedLocation,
+          stipend: selectedStipend,
+          category: selectedCategory,
+          sortBy,
+        });
 
-      // if (res.data.success && Array.isArray(res.data.data)) {
-      //   // Flatten employer postings into internships
-      //   const posts = res.data.data.flatMap(emp => {
-      //     console.log(emp, "emp"); // will log employer object
-      //     return (emp.postings || []).map(post => ({
-      //       id: post._id,
-      //       title: post.title,
-      //       company: emp.organizationName || `${emp.firstName} ${emp.lastName}`,
-      //       logo: emp.organizationLogo
-      //         ? emp.organizationLogo.slice(0, 2).toUpperCase()
-      //         : "IN",
-      //       location: post.jobType || "Work From Home",
-      //       stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
-      //       duration: post.partFullTime || "Flexible",
-      //       startDate: "Immediately",
-      //       applicants: Math.floor(Math.random() * 200), // mock
-      //       tags: (post.skillsRequired || "").split(",").filter(Boolean),
-      //       isActive: true,
-      //       rating: 4.2, // mock value
-      //       reviews: 50, // mock value
-      //       description: post.description || "",
-      //       requirements: [],
-      //       perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
-      //     }));
-      //   });
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const posts = res.data.data.map(post => ({
+            id: post._id,
+            title: post.title,
+            company: post.employer?.organizationName || 
+                    `${post.employer?.firstName || ""} ${post.employer?.lastName || ""}`.trim(),
+            logo: post.employer?.organizationLogo
+              ? post.employer.organizationLogo.slice(0, 2).toUpperCase()
+              : "IN",
+            location: post.jobType || "Work From Home",
+            stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
+            duration: "Flexible", // ✅ no duration filter, fallback text
+            startDate: "Immediately",
+            applicants:post.applicantsCount || 0,
+            tags: (post.skillsRequired || "").split(",").filter(Boolean),
+            isActive: true,
+            rating: 4.2,
+            reviews: 50,
+            description: post.description || "",
+            requirements: [],
+            perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
+          }));
 
-      //   console.log(posts, "posts after mapping");
-      //   setInternships(posts);
-      // }
-      if (res.data.success && Array.isArray(res.data.data)) {
-        const posts = res.data.data.map(post => ({
-          id: post._id,
-          title: post.title,
-          company: post.employer?.organizationName || 
-                  `${post.employer?.firstName || ""} ${post.employer?.lastName || ""}`.trim(),
-          logo: post.employer?.organizationLogo
-            ? post.employer.organizationLogo.slice(0, 2).toUpperCase()
-            : "IN",
-          location: post.jobType || "Work From Home",
-          stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
-          duration: post.partFullTime || "Flexible",
-          startDate: "Immediately",
-          applicants: Math.floor(Math.random() * 200), // mock
-          tags: (post.skillsRequired || "").split(",").filter(Boolean),
-          isActive: true,
-          rating: 4.2, // mock
-          reviews: 50, // mock
-          description: post.description || "",
-          requirements: [],
-          perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
-        }));
-
-        console.log(posts, "posts after mapping");
-        setInternships(posts);
+          setInternships(posts);
+        }
+      } catch (error) {
+        console.error("Error fetching internships:", error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-    } catch (error) {
-      console.error("Error fetching internships:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchInternships();
+  }, [searchQuery, selectedLocation, selectedStipend, selectedCategory, sortBy]);
 
-  fetchInternships();
-}, []);
-
-console.log(internships,'internships')
   const categories = [
     'All', 'Web Development', 'Mobile App Development', 'Data Science', 
     'Digital Marketing', 'Graphic Design', 'Content Writing', 'UI/UX Design',
@@ -105,30 +77,41 @@ console.log(internships,'internships')
     'Hyderabad', 'Pune', 'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida'
   ];
 
-  const durations = ['All', '1 Month', '2 Months', '3 Months', '4 Months', '5 Months', '6 Months'];
-  const stipendRanges = ['All', 'Unpaid', '< ₹5,000', '₹5,000 - ₹10,000', '₹10,000 - ₹20,000', '₹20,000+'];
+  const stipendRanges = [
+    'All', 'Unpaid', '< ₹5,000', '₹5,000 - ₹10,000', '₹10,000 - ₹20,000', '₹20,000+'
+  ];
 
+  // ✅ Filtering (no duration filter now)
   const filteredInternships = internships.filter(internship => {
     const matchesSearch = internship.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          internship.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          internship.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesLocation = selectedLocation === 'All' || internship.location === selectedLocation;
-    const matchesDuration = selectedDuration === 'All' || internship.duration === selectedDuration;
-    
-    return matchesSearch && matchesLocation && matchesDuration;
+    return matchesSearch && matchesLocation;
   });
 
-  const toggleSaveInternship = (id) => {
-    const newSaved = new Set(savedInternships);
-    if (newSaved.has(id)) {
-      newSaved.delete(id);
-    } else {
-      newSaved.add(id);
+   const toggleSaveInternship = async (id) => {
+    try {
+      if (savedInternships.has(id)) {
+        // remove wishlist
+        await EmployerService.removeFromWishlist(id);
+        const newSaved = new Set(savedInternships);
+        newSaved.delete(id);
+        setSavedInternships(newSaved);
+      } else {
+        // add wishlist
+        await EmployerService.addToWishlist(id);
+        const newSaved = new Set(savedInternships);
+        newSaved.add(id);
+        setSavedInternships(newSaved);
+      }
+    } catch (error) {
+      console.error("Wishlist error:", error.response?.data || error.message);
     }
-    setSavedInternships(newSaved);
   };
-console.log(filteredInternships,'internship')
+
+
   const InternshipCard = ({ internship }) => (
     <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
       <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-4">
@@ -199,9 +182,6 @@ console.log(filteredInternships,'internship')
             </span>
           )}
         </div>
-        {/* <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
-          Apply Now
-        </button> */}
         <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
           <Link to={`/jobs/${internship.id}`}>Apply Now</Link>
         </button>
@@ -245,13 +225,13 @@ console.log(filteredInternships,'internship')
             </div>
 
             {/* Filters Button */}
-            <button
+            {/* <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               <Filter className="w-5 h-5 mr-2" />
               Filters
-            </button>
+            </button> */}
 
             {/* Search Button */}
             <button className="bg-[#1e3a5f] text-white px-6 py-3 rounded-lg font-medium w-full lg:w-auto">
@@ -261,15 +241,12 @@ console.log(filteredInternships,'internship')
 
           {/* Filters */}
           {showFilters && (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="px-3 py-2 border rounded-md">
                 {categories.map(c => <option key={c}>{c}</option>)}
               </select>
               <select value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)} className="px-3 py-2 border rounded-md">
                 {locations.map(l => <option key={l}>{l}</option>)}
-              </select>
-              <select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)} className="px-3 py-2 border rounded-md">
-                {durations.map(d => <option key={d}>{d}</option>)}
               </select>
               <select value={selectedStipend} onChange={(e) => setSelectedStipend(e.target.value)} className="px-3 py-2 border rounded-md">
                 {stipendRanges.map(s => <option key={s}>{s}</option>)}
@@ -283,11 +260,15 @@ console.log(filteredInternships,'internship')
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
             {loading ? "Loading..." : `${filteredInternships.length} Internships Found`}
           </h1>
-          <select className="px-3 py-2 border rounded-md">
-            <option>Latest</option>
-            <option>Stipend (High to Low)</option>
-            <option>Stipend (Low to High)</option>
-            <option>Duration</option>
+          <select 
+            className="px-3 py-2 border rounded-md"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="Latest">Latest</option>
+            <option value="StipendHighLow">Stipend (High to Low)</option>
+            <option value="StipendLowHigh">Stipend (Low to High)</option>
+            <option value="Duration">Duration</option>
           </select>
         </div>
 

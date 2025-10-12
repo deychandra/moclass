@@ -22,7 +22,9 @@ import ResetPassword from "./components/ResetPassword";
 import FindInternship from "./pages/FindInternship.jsx";
 import Dashboard from "./pages/Dashboard";
 import JobList from "./pages/JobList.jsx";
+import MyApplication from "./pages/MyApplication.jsx";
 import ResumeBuilder from "./pages/ResumeBuilder.jsx";
+import MyWishlist from "./pages/MyWishlist.jsx";
 
 function App() {
   return (
@@ -42,7 +44,7 @@ function App() {
       <BrowserRouter>
       <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="register" element={<Register />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/aboutUs" element={<AboutUs />} />
@@ -51,9 +53,11 @@ function App() {
           <Route path="/resumebuilder" element={<ResumeBuilder />} />
           <Route path="/post-internship" element={<LogoutAuth><PostInternship /></LogoutAuth>} />
           <Route path="/find-internship" element={<FindInternships />} />
-          <Route path="/find-internships" element={<FindInternship />} />
+          <Route path="/" element={<FindInternship />} />
           <Route path="/dashboard/manage-jobs" element={<JobList />} />
           <Route path="/employer-profile" element={<EmployerProfile />} />
+          <Route path="/mywishlist" element={<MyWishlist />} />
+          <Route path="/myapplication" element={<MyApplication />} />
           <Route path="/otp-generator" element={<OtpGenerator />} />
           <Route path="/signup" element={<LogoutAuth><SignUp /></LogoutAuth>} />
           <Route path="/login" element={<LogoutAuth><Login /></LogoutAuth>} />

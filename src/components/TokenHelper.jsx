@@ -1,47 +1,36 @@
-import { Navigate } from "react-router-dom";
-
 class TokenHelper {
-  state = {
-    language_type: "",
-  };
+  setToken(payload) {
+    // Ensure token is stored as raw string (no quotes)
+    if (payload) {
+      localStorage.setItem("token", payload.replace(/^"|"$/g, ""));
+    }
+  }
 
-  constructor() {
-    // this._accessToken = "oko";
+  getToken() {
+    const token = localStorage.getItem("token");
+    return token ? token.replace(/^"|"$/g, "") : null;
   }
 
   getHeader() {
     return {
       headers: {
-        // "Content-Type": "application/json",
-        "token": this.getToken()
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.getToken()}`, // ✅ standard way
       },
     };
   }
 
-  setToken(payload){
-    localStorage.setItem("token",payload)
+  setUserInfo(payload) {
+    localStorage.setItem("user_info", JSON.stringify(payload));
   }
 
-  getToken(){
-    return localStorage.getItem("token")
+  getUserInfo() {
+    return JSON.parse(localStorage.getItem("user_info"));
   }
 
-  
-
-
-  setUserInfo(payload){
-    localStorage.setItem("user_info",JSON.stringify(payload))
-  }
-
-  getUserInfo(){
-    var data=JSON.parse(localStorage.getItem("user_info"));
-    return data;
-  }
-  setLogoutInfo(){
+  setLogoutInfo() {
     localStorage.clear();
   }
-
-   
 }
 
 export default new TokenHelper();

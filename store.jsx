@@ -32,7 +32,7 @@ function reducer(state, action) {
             localStorage.setItem("userType", local_value)
             return {
                 ...state,
-                name: action.value,
+                userType: action.value,
             };
 
         case "name":
