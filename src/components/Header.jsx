@@ -70,6 +70,12 @@ console.log(user,'user')
               >
                 Register
               </Link>}
+             {user.userType !== "student" && (<Link
+                to="/employer-profile"
+                className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Post a Job
+              </Link>)}
               {user.token&& <Link onClick={Logout}
                 to="/register"
                 className="bg-[#1e3a5f] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"

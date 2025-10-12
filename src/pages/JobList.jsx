@@ -1,278 +1,198 @@
+// ManageJobsTabs.jsx
 import React, { useState, useEffect, useContext } from "react";
-import { userContext } from '../../store';
-import { Link } from "react-router-dom";
+import {
+  MoreVertical,
+  ArrowLeft,
+  ArrowRight,
+  PlusCircle,
+} from "lucide-react";
+import { userContext } from "../../store";
 import EmployerService from "../services/employer.service";
-import { 
-  Search, MapPin, Clock, IndianRupee, Filter, Heart, Share2, 
-  Star, Calendar, Users 
-} from 'lucide-react';
 
-const JobList = () => {
-    const { user } = useContext(userContext);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedLocation, setSelectedLocation] = useState('All');
-  const [selectedDuration, setSelectedDuration] = useState('All');
-  const [selectedStipend, setSelectedStipend] = useState('All');
-  const [savedInternships, setSavedInternships] = useState(new Set());
+const StatusPill = ({ status }) => {
+  const base =
+    "inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold";
+  if (status === "Under review")
+    return <span className={`${base} bg-blue-50 text-blue-700`}>{status}</span>;
+  if (status === "Active")
+    return (
+      <span className={`${base} bg-green-50 text-green-700`}>{status}</span>
+    );
+  if (status === "Closed")
+    return (
+      <span className={`${base} bg-rose-50 text-rose-700`}>{status}</span>
+    );
+  return <span className={`${base} bg-gray-50 text-gray-700`}>{status}</span>;
+};
 
-  const [internships, setInternships] = useState([]); // ✅ dynamic internships
+export default function ManageJobsTabs() {
+  const [tab, setTab] = useState("jobs");
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(userContext);
 
-  // Fetch internships dynamically from backend
- useEffect(() => {
-  const fetchInternships = async () => {
-    console.log(user,'user')
-    try {
-      const res = await EmployerService.getPostByUserId(user.id);
-      console.log(res, "res");
-
-      if (res.data.success && Array.isArray(res.data.data)) {
-        const posts = res.data.data.map(post => ({
-          id: post._id,
-          title: post.title,
-          company: post.employer?.organizationName || 
-                  `${post.employer?.firstName || ""} ${post.employer?.lastName || ""}`.trim(),
-          logo: post.employer?.organizationLogo
-            ? post.employer.organizationLogo.slice(0, 2).toUpperCase()
-            : "IN",
-          location: post.jobType || "Work From Home",
-          stipend: post.fixedPayMin ? `₹${post.fixedPayMin}` : "Unpaid",
-          duration: post.partFullTime || "Flexible",
-          startDate: "Immediately",
-          applicants: Math.floor(Math.random() * 200), // mock
-          tags: (post.skillsRequired || "").split(",").filter(Boolean),
-          isActive: true,
-          rating: 4.2, // mock
-          reviews: 50, // mock
-          description: post.description || "",
-          requirements: [],
-          perks: Object.keys(post.perks || {}).filter(k => post.perks[k]),
-        }));
-
-        console.log(posts, "posts after mapping");
-        setInternships(posts);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await EmployerService.getPostByUserId(user.id);
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const mapped = res.data.data.map((post) => ({
+            id: post._id,
+            title: post.title,
+            type: post.postType || "job", // ✅ assume "internship" or "job"
+            status: post.status || "Under review",
+            views: post.views || Math.floor(Math.random() * 100),
+            action: "Upgrade",
+          }));
+          setPosts(mapped);
+        }
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-    } catch (error) {
-      console.error("Error fetching internships:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (user?.id) fetchPosts();
+  }, [user]);
 
-  fetchInternships();
-}, []);
-
-console.log(internships,'internships')
-  const categories = [
-    'All', 'Web Development', 'Mobile App Development', 'Data Science', 
-    'Digital Marketing', 'Graphic Design', 'Content Writing', 'UI/UX Design',
-    'Business Development', 'Human Resources', 'Finance', 'Operations'
-  ];
-
-  const locations = [
-    'All', 'Work From Home', 'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 
-    'Hyderabad', 'Pune', 'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida'
-  ];
-
-  const durations = ['All', '1 Month', '2 Months', '3 Months', '4 Months', '5 Months', '6 Months'];
-  const stipendRanges = ['All', 'Unpaid', '< ₹5,000', '₹5,000 - ₹10,000', '₹10,000 - ₹20,000', '₹20,000+'];
-
-  const filteredInternships = internships.filter(internship => {
-    const matchesSearch = internship.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         internship.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         internship.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesLocation = selectedLocation === 'All' || internship.location === selectedLocation;
-    const matchesDuration = selectedDuration === 'All' || internship.duration === selectedDuration;
-    
-    return matchesSearch && matchesLocation && matchesDuration;
-  });
-
-  const toggleSaveInternship = (id) => {
-    const newSaved = new Set(savedInternships);
-    if (newSaved.has(id)) {
-      newSaved.delete(id);
-    } else {
-      newSaved.add(id);
-    }
-    setSavedInternships(newSaved);
-  };
-console.log(filteredInternships,'internship')
-  const InternshipCard = ({ internship }) => (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-4">
-        <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <span className="text-blue-600 font-semibold text-lg">{internship.logo}</span>
-          </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900">{internship.title}</h3>
-            <p className="text-gray-600">{internship.company}</p>
-            <div className="flex items-center space-x-2 mt-1">
-              <Star className="w-4 h-4 text-yellow-400 fill-current" />
-              <span className="text-sm text-gray-600">{internship.rating} ({internship.reviews})</span>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2 self-end sm:self-auto">
-          <button
-            onClick={() => toggleSaveInternship(internship.id)}
-            className={`p-2 rounded-full ${savedInternships.has(internship.id) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} hover:bg-opacity-80`}
-          >
-            <Heart className={`w-4 h-4 ${savedInternships.has(internship.id) ? 'fill-current' : ''}`} />
-          </button>
-          <button className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-            <Share2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-4">
-        <div className="flex items-center space-x-2">
-          <MapPin className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-600">{internship.location}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <IndianRupee className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-600">{internship.stipend}/month</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Clock className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-600">{internship.duration}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Calendar className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-600">{internship.startDate}</span>
-        </div>
-      </div>
-
-      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{internship.description}</p>
-
-      <div className="flex flex-wrap gap-2 mb-3">
-        {internship.tags.map((tag, index) => (
-          <span key={index} className="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-4 text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <Users className="w-4 h-4" />
-            <span>{internship.applicants} applicants</span>
-          </div>
-          {internship.isActive && (
-            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-              Actively hiring
-            </span>
-          )}
-        </div>
-        {/* <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
-          Apply Now
-        </button> */}
-        <button className="bg-[#1e3a5f] text-white px-6 py-2 rounded-md font-medium w-full sm:w-auto">
-          <Link to={`/jobs/${internship.id}`}>Apply Now</Link>
-        </button>
-      </div>
-    </div>
+  // ✅ Filter posts based on tab
+  const filteredRows = posts.filter((p) =>
+    tab === "jobs" ? p.type === "job" : p.type === "internship"
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
-        {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-3">
-            {/* Search Input */}
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search internships..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
+    <div className="space-y-6">
+      {/* Premium Banner */}
+      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-700">
+        <div className="max-w-5xl mx-auto flex items-start gap-3">
+          <div className="flex-1">
+            Post unlimited listings and get access to features like boosted
+            visibility, applicant contact numbers, etc., with Internshala
+            Premium.
+            <a className="font-semibold underline ml-1" href="#upgrade">
+              {" "}
+              View Premium Plans now
+            </a>
+          </div>
+          <div className="text-sm text-blue-600 font-medium">?</div>
+        </div>
+      </div>
 
-            {/* Location Input */}
-            <div className="lg:w-64">
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={locationFilter}
-                  onChange={(e) => setLocationFilter(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* Filters Button */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              <Filter className="w-5 h-5 mr-2" />
-              Filters
-            </button>
-
-            {/* Search Button */}
-            <button className="bg-[#1e3a5f] text-white px-6 py-3 rounded-lg font-medium w-full lg:w-auto">
-              Search
-            </button>
+      {/* Tabs */}
+      <div className="bg-white rounded-xl shadow-sm">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="border-b">
+            <nav className="flex -mb-px space-x-6">
+              <button
+                onClick={() => setTab("internships")}
+                className={`pb-3 pt-4 text-sm font-medium ${
+                  tab === "internships"
+                    ? "text-sky-600 border-b-2 border-sky-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Internships
+              </button>
+              <button
+                onClick={() => setTab("jobs")}
+                className={`pb-3 pt-4 text-sm font-medium ${
+                  tab === "jobs"
+                    ? "text-sky-600 border-b-2 border-sky-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Jobs
+              </button>
+            </nav>
           </div>
 
-          {/* Filters */}
-          {showFilters && (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="px-3 py-2 border rounded-md">
-                {categories.map(c => <option key={c}>{c}</option>)}
-              </select>
-              <select value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)} className="px-3 py-2 border rounded-md">
-                {locations.map(l => <option key={l}>{l}</option>)}
-              </select>
-              <select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)} className="px-3 py-2 border rounded-md">
-                {durations.map(d => <option key={d}>{d}</option>)}
-              </select>
-              <select value={selectedStipend} onChange={(e) => setSelectedStipend(e.target.value)} className="px-3 py-2 border rounded-md">
-                {stipendRanges.map(s => <option key={s}>{s}</option>)}
-              </select>
+          {/* Table */}
+          <div className="py-6">
+            <div className="overflow-hidden rounded-md">
+              <div className="grid grid-cols-[1.8fr_1fr_120px_120px_160px_48px] gap-4 items-center text-sm text-gray-500 px-4 py-3 bg-gray-50 border-b">
+                <div className="font-semibold">JOB TITLE</div>
+                <div className="font-semibold">STATUS</div>
+                <div className="font-semibold">TOTAL VIEWS</div>
+                <div className="font-semibold">ACTION</div>
+                <div className="font-semibold">UPGRADE TO PREMIUM</div>
+                <div className="sr-only">menu</div>
+              </div>
+
+              <div className="bg-white">
+                {loading ? (
+                  <div className="p-8 text-center text-gray-500">
+                    Loading...
+                  </div>
+                ) : filteredRows.length > 0 ? (
+                  filteredRows.map((r) => (
+                    <div
+                      key={r.id}
+                      className="grid grid-cols-[1.8fr_1fr_120px_120px_160px_48px] gap-4 items-center px-4 py-6 border-b last:border-b-0"
+                    >
+                      <div className="text-gray-800">{r.title}</div>
+
+                      <div>
+                        <StatusPill status={r.status} />
+                      </div>
+
+                      <div className="text-gray-600">{r.views}</div>
+
+                      <div>
+                        <button className="text-sm font-semibold text-sky-600 hover:underline inline-flex items-center gap-2">
+                          <PlusCircle className="w-4 h-4" />
+                          Upgrade
+                        </button>
+                      </div>
+
+                      <div className="text-sm text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <span className="flex items-center gap-1">
+                            <span className="text-yellow-500">👑</span>
+                            <span className="underline text-sky-600">
+                              Upgrade
+                            </span>
+                          </span>
+                          <div className="text-xs text-gray-400">
+                            (get priority approval)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <button
+                          title="More actions"
+                          className="p-2 rounded-full hover:bg-gray-100"
+                          aria-label="more"
+                        >
+                          <MoreVertical className="w-4 h-4 text-gray-500" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-gray-500">
+                    No listings yet
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* Results */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-            {loading ? "Loading..." : `${filteredInternships.length} Internships Found`}
-          </h1>
-          <select className="px-3 py-2 border rounded-md">
-            <option>Latest</option>
-            <option>Stipend (High to Low)</option>
-            <option>Stipend (Low to High)</option>
-            <option>Duration</option>
-          </select>
-        </div>
-
-        {/* Internship List */}
-        <div className="space-y-4">
-          {!loading && filteredInternships.map(internship => (
-            <InternshipCard key={internship.id} internship={internship} />
-          ))}
+            {/* Pagination */}
+            {filteredRows.length > 0 && (
+              <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-500">
+                <button className="p-2 rounded hover:bg-gray-100">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <div className="px-3">1 / 1</div>
+                <button className="p-2 rounded hover:bg-gray-100">
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default JobList;
+}
