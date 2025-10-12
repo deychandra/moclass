@@ -23,7 +23,7 @@ const Footer = () => {
                             Browse Internships</Link></li>
                         <li><Link to="/create-profile" className="hover:text-white transition-colors">Create Profile</Link></li>
                         <li><Link to="/career-guidance" className="hover:text-white transition-colors">Career Guidance</Link></li>
-                        <li><Link to="/resume-builder" className="hover:text-white transition-colors">Resume Builder</Link></li>
+                        <li><Link to="/resumebuilder" className="hover:text-white transition-colors">Resume Builder</Link></li>
                     </ul>
                 </div>
                 <div>
