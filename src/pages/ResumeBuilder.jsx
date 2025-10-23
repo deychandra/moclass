@@ -50,6 +50,14 @@ export default function ResumeBuilder() {
     },
   ]);
 
+
+  const [personalInfo, setPersonalInfo] = useState({
+    name: "Jagan Rout",
+    email: "jaganrout33@gmail.com",
+    phone: "+91 9556246675",
+    location: "Bhubaneswar",
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [modalSection, setModalSection] = useState("");
@@ -61,11 +69,13 @@ export default function ResumeBuilder() {
     setModalSection(section);
     setEditingIndex(index);
 
+    // prefill formData depending on section & mode
     if (mode === "edit") {
       if (section === "education") setFormData(educations[index]);
       else if (section === "skill") setFormData({ name: skills[index] });
       else if (section === "experience") setFormData(experience[index]);
       else if (section === "career") setFormData({ text: "" });
+      else if (section === "personal") setFormData(personalInfo);
     } else {
       if (section === "education")
         setFormData({ degree: "", college: "", year: "", cgpa: "" });
@@ -79,6 +89,8 @@ export default function ResumeBuilder() {
           description: "",
         });
       else if (section === "career") setFormData({ text: "" });
+      else if (section === "personal")
+        setFormData({ name: "", email: "", phone: "", location: "" });
     }
 
     setIsModalOpen(true);
@@ -116,6 +128,9 @@ export default function ResumeBuilder() {
         setExperience((s) =>
           s.map((it, i) => (i === editingIndex ? formData : it))
         );
+    } else if (modalSection === "personal") {
+      // NEW: update personalInfo
+      setPersonalInfo(formData);
     }
 
     closeModal();
@@ -165,21 +180,29 @@ export default function ResumeBuilder() {
           <div className="flex items-start justify-between gap-6">
             <div>
               <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-gray-800">Jagan Rout</h2>
-                <button className="text-gray-500 hover:text-gray-700">
+                {/* Use personalInfo state here */}
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {personalInfo.name}
+                </h2>
+                <button
+                  className="text-gray-500 hover:text-gray-700"
+                  onClick={() =>
+                    openModal({ mode: "edit", section: "personal", index: null })
+                  }
+                >
                   <Edit2 size={16} />
                 </button>
               </div>
 
               <div className="mt-2 text-sm text-gray-600">
                 <div className="flex items-center gap-3">
-                  <Mail size={14} /> <span>jaganrout33@gmail.com</span>
+                  <Mail size={14} /> <span>{personalInfo.email}</span>
                 </div>
                 <div className="flex items-center gap-3 mt-1">
-                  <Phone size={14} /> <span>+91 9556246675</span>
+                  <Phone size={14} /> <span>{personalInfo.phone}</span>
                 </div>
                 <div className="flex items-center gap-3 mt-1">
-                  <MapPin size={14} /> <span>Bhubaneswar</span>
+                  <MapPin size={14} /> <span>{personalInfo.location}</span>
                 </div>
               </div>
             </div>

@@ -398,6 +398,79 @@ export default function ResumeModal({
               </form>
             </>
           )}
+
+
+
+
+
+
+{modalSection === "personal" && (
+  <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+    <div>
+      <label className="font-medium text-sm text-[#333] mb-1 block">
+        Full name
+      </label>
+      <input
+        name="name"
+        value={formData.name || ""}
+        onChange={onChange}
+        className="shadow-none p-[11px] bg-white text-[#484848] border border-[#DDD] rounded-[3px] text-[14px] w-full outline-0 "
+      />
+    </div>
+
+    <div className="grid grid-cols-2 gap-3">
+      <div>
+        <label className="font-medium text-sm text-[#333] mb-1 block">
+          Email
+        </label>
+        <input
+          name="email"
+          value={formData.email || ""}
+          onChange={onChange}
+          className="shadow-none p-[11px] bg-white text-[#484848] border border-[#DDD] rounded-[3px] text-[14px] w-full outline-0 "
+          type="email"
+        />
+      </div>
+
+      <div>
+        <label className="font-medium text-sm text-[#333] mb-1 block">
+          Phone
+        </label>
+        <input
+          name="phone"
+          value={formData.phone || ""}
+          onChange={onChange}
+          className="shadow-none p-[11px] bg-white text-[#484848] border border-[#DDD] rounded-[3px] text-[14px] w-full outline-0 "
+          type="tel"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label className="font-medium text-sm text-[#333] mb-1 block">
+        Location
+      </label>
+      <input
+        name="location"
+        value={formData.location || ""}
+        onChange={onChange}
+        className="shadow-none p-[11px] bg-white text-[#484848] border border-[#DDD] rounded-[3px] text-[14px] w-full outline-0 "
+      />
+    </div>
+
+
+<h1>gender is male</h1>
+
+
+  </form>
+)}
+
+
+
+
+
+
+
         </div>
 
         <div className="flex items-center justify-end gap-3 p-4 border-t border-[#DDD]">
