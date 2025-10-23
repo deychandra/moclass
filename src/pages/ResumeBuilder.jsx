@@ -1,134 +1,417 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  Download,
+  Edit2,
+  Trash2,
+  Plus,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
+import ResumeModal from "../components/Modal/ResumeModal";
 
 export default function ResumeBuilder() {
+  const [skills, setSkills] = useState([
+    "PHP",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Adobe Photoshop",
+    "MySQL",
+    "jQuery",
+    "Node.js",
+    "MongoDB",
+    "Express.js",
+  ]);
+
+  const [educations, setEducations] = useState([
+    {
+      degree: "B.Tech (Hons.), Computer Science & Engineering",
+      college: "Templecity Institute Of Technology And Engineering",
+      year: "2016 - 2020",
+      cgpa: "7.30/10",
+    },
+    {
+      degree: "B.Tech (Hons.), Computer Science & Engineering",
+      college: "Templecity Institute Of Technology And Engineering",
+      year: "2016 - 2020",
+      cgpa: "7.30/10",
+    },
+  ]);
+
+  const [experience, setExperience] = useState([
+    {
+      title: "Webdevelopment Internship",
+      company: "Appmantechnology Pvt.ltd, Bhubaneswar",
+      type: "Internship",
+      period: "Dec 2019 - Dec 2020 (1 year)",
+      description:
+        "I have done web development using node.js, mongodb, express js, mongoose with a realstate project.",
+    },
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("add");
+  const [modalSection, setModalSection] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  function openModal({ mode = "add", section, index = null }) {
+    setModalMode(mode);
+    setModalSection(section);
+    setEditingIndex(index);
+
+    if (mode === "edit") {
+      if (section === "education") setFormData(educations[index]);
+      else if (section === "skill") setFormData({ name: skills[index] });
+      else if (section === "experience") setFormData(experience[index]);
+      else if (section === "career") setFormData({ text: "" });
+    } else {
+      if (section === "education")
+        setFormData({ degree: "", college: "", year: "", cgpa: "" });
+      else if (section === "skill") setFormData({ name: "" });
+      else if (section === "experience")
+        setFormData({
+          title: "",
+          company: "",
+          type: "",
+          period: "",
+          description: "",
+        });
+      else if (section === "career") setFormData({ text: "" });
+    }
+
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setFormData({});
+    setEditingIndex(null);
+    setModalSection("");
+  }
+
+  function handleFormChange(e) {
+    const { name, value } = e.target;
+    setFormData((s) => ({ ...s, [name]: value }));
+  }
+
+  function saveForm() {
+    if (modalSection === "education") {
+      if (modalMode === "add") setEducations((s) => [formData, ...s]);
+      else if (modalMode === "edit")
+        setEducations((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+    } else if (modalSection === "skill") {
+      if (!formData.name) return;
+      if (modalMode === "add") setSkills((s) => [formData.name, ...s]);
+      else if (modalMode === "edit")
+        setSkills((s) =>
+          s.map((it, i) => (i === editingIndex ? formData.name : it))
+        );
+    } else if (modalSection === "experience") {
+      if (modalMode === "add") setExperience((s) => [formData, ...s]);
+      else if (modalMode === "edit")
+        setExperience((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+    }
+
+    closeModal();
+  }
+
+  function removeSkill(index) {
+    setSkills((s) => s.filter((_, i) => i !== index));
+  }
+
+  function removeEducation(index) {
+    setEducations((s) => s.filter((_, i) => i !== index));
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-6">
-        {/* back + title */}
-        <div className="flex items-center mb-6">
-          <a href="#" className="text-blue-600 mr-4 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </a>
-          <h1 className="flex-1 text-center text-2xl font-semibold text-gray-800">Moclass Resume</h1>
+      <div className="max-w-4xl mx-auto bg-white shadow-sm rounded-md border border-gray-100">
+        <div className="px-8 pt-10 pb-6">
+          <h1 className="text-2xl font-semibold text-center text-gray-800">
+            moclass Resume
+          </h1>
         </div>
 
-        {/* yellow notice */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded p-4 text-sm text-yellow-800 mb-6">
-          <div className="flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.516 9.81c.75 1.334-.213 2.99-1.742 2.99H4.483c-1.529 0-2.492-1.656-1.742-2.99l5.516-9.81zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z" clipRule="evenodd" />
+        <div className="px-8">
+          <div className="bg-yellow-50 border border-yellow-100 rounded-md p-3 text-sm text-yellow-800 flex items-center gap-3">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M12 2l9 4v6c0 5-3.58 9-9 11-5.42-2-9-6-9-11V6l9-4z"
+              ></path>
             </svg>
-            <span>This is the resume employers will see when you apply. Please make sure it is up to date.</span>
+            <div className="text-sm">
+              This is the resume employers will see when you apply. Please make
+              sure it is up to date.
+            </div>
           </div>
         </div>
 
-        {/* card */}
-        <div className="bg-white border border-gray-200 rounded shadow-sm divide-y divide-gray-100">
-          {/* header info */}
-          <div className="p-8">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                  Chandra Sekhar Dey
-                  <button className="p-1 rounded text-gray-500 hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M17.414 2.586a2 2 0 010 2.828L8.414 14.414 4 15l.586-4.414L14.586 2.586a2 2 0 012.828 0z" />
-                    </svg>
-                  </button>
-                </h2>
-                <div className="text-sm text-gray-500 mt-2">
-                  <div>deychandrasekhar03@gmail.com</div>
-                  <div className="mt-1">+91 8145234446</div>
-                  <div className="mt-1">Kolkata</div>
-                </div>
-              </div>
-
-              <div className="text-sm text-blue-600 flex items-center gap-3">
-                <button className="flex items-center gap-2 hover:underline">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M9 2a1 1 0 00-1 1v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-3V3a1 1 0 00-1-1H9z" />
-                  </svg>
-                  Download
+        <div className="px-8 py-8">
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-bold text-gray-800">Jagan Rout</h2>
+                <button className="text-gray-500 hover:text-gray-700">
+                  <Edit2 size={16} />
                 </button>
               </div>
+
+              <div className="mt-2 text-sm text-gray-600">
+                <div className="flex items-center gap-3">
+                  <Mail size={14} /> <span>jaganrout33@gmail.com</span>
+                </div>
+                <div className="flex items-center gap-3 mt-1">
+                  <Phone size={14} /> <span>+91 9556246675</span>
+                </div>
+                <div className="flex items-center gap-3 mt-1">
+                  <MapPin size={14} /> <span>Bhubaneswar</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <button className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
+                <Download size={16} /> <span className="text-sm">Download</span>
+              </button>
             </div>
           </div>
 
-          {/* sections */}
-          <div className="p-6 space-y-6">
-            {/* career objective */}
-            <Section title="CAREER OBJECTIVE">
-              <AddLink text="Add your career objective" />
+          <hr className="my-6 border-t border-gray-200" />
+
+          <div className="space-y-8">
+            <Section label="CAREER OBJECTIVE">
+              <div
+                className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                onClick={() => openModal({ mode: "add", section: "career" })}
+              >
+                <Plus size={14} />{" "}
+                <span className="ml-2">Add your career objective</span>
+              </div>
             </Section>
 
-            {/* education */}
-            <Section title="EDUCATION">
-              <div className="bg-gray-50 border border-gray-100 rounded p-4">
-                <h3 className="font-semibold text-gray-800">Bachelor of Arts (B.A.), Computer Science & Engineering</h3>
-                <p className="text-sm text-gray-500 mt-2">Shyama Prasad Mukherjee College Of Education</p>
-                <p className="text-sm text-gray-400 mt-2">2024 - 2030</p>
-                <div className="mt-3 flex items-center gap-3 text-gray-500">
-                  <button className="p-1 hover:bg-gray-100 rounded">Edit</button>
-                  <button className="p-1 hover:bg-gray-100 rounded">Delete</button>
+            <Section label="EDUCATION">
+              <div className="space-y-4">
+                {educations.map((ed, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ed.degree}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "education",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeEducation(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ed.college}
+                    </div>
+                    <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+                      <div>{ed.year}</div>
+                      <div>CGPA: {ed.cgpa}</div>
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "education" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add education</span>
                 </div>
               </div>
-
-              <AddLink text="Add education" />
             </Section>
 
-            {/* work experience */}
-            <Section title="WORK EXPERIENCE">
-              <div className="bg-gray-50 border border-gray-100 rounded p-4">
-                <h3 className="font-semibold text-gray-800">Associate Software Developer</h3>
-                <p className="text-sm text-gray-500 mt-1">Kloudz, Virtual</p>
-                <p className="text-sm text-gray-400 mt-1">Job • Sep 2025 - Present (1 month)</p>
-                <div className="mt-3 flex items-center gap-3 text-gray-500">
-                  <button className="p-1 hover:bg-gray-100 rounded">Edit</button>
-                  <button className="p-1 hover:bg-gray-100 rounded">Delete</button>
+            <Section label={`WORK EXPERIENCE (${experience.length} YEAR)`}>
+              <div className="space-y-4">
+                {experience.map((exp, i) => (
+                  <Card key={i}>
+                    <div className="flex justify-between">
+                      <div>
+                        <div className="text-sm font-semibold text-gray-800">
+                          {exp.title}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {exp.company}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "experience",
+                              index: i,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button className="p-1 hover:bg-gray-100 rounded-full">
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-xs text-gray-500">
+                      {exp.type} • {exp.period}
+                    </div>
+                    <p className="mt-3 text-sm text-gray-600">
+                      {exp.description}
+                    </p>
+                  </Card>
+                ))}
+
+                <div className="flex gap-4 text-sm">
+                  <div
+                    className="text-blue-600 cursor-pointer hover:underline flex items-center"
+                    onClick={() =>
+                      openModal({ mode: "add", section: "experience" })
+                    }
+                  >
+                    <Plus size={14} /> <span className="ml-2">Add job</span>
+                  </div>
+                  <div
+                    className="text-blue-600 cursor-pointer hover:underline flex items-center"
+                    onClick={() =>
+                      openModal({ mode: "add", section: "experience" })
+                    }
+                  >
+                    <Plus size={14} />{" "}
+                    <span className="ml-2">Add internship</span>
+                  </div>
                 </div>
               </div>
+            </Section>
 
-              <div className="flex gap-4 mt-4">
-                <AddLink text="Add job" />
-                <AddLink text="Add internship" />
+            <Section label="SKILLS">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white border border-gray-100 rounded-md p-4">
+                  <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
+                    {skills.map((s, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between"
+                      >
+                        <div>{s}</div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded-full text-gray-400"
+                            onClick={() =>
+                              openModal({
+                                mode: "edit",
+                                section: "skill",
+                                index: idx,
+                              })
+                            }
+                          >
+                            <Edit2 size={14} />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-gray-100 rounded-full text-gray-400"
+                            onClick={() => removeSkill(idx)}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div
+                    className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                    onClick={() => openModal({ mode: "add", section: "skill" })}
+                  >
+                    <Plus size={14} /> <span className="ml-2">Add skill</span>
+                  </div>
+                </div>
               </div>
             </Section>
 
-            {/* repeated simple sections */}
-            <Section title="EXTRA CURRICULAR ACTIVITIES"><AddLink text="Add extra curricular activities" /></Section>
-            <Section title="TRAININGS/ COURSES"><AddLink text="Add training/ course" /></Section>
-            <Section title="ACADEMICS/ PERSONAL PROJECTS"><AddLink text="Add academic/ personal project" /></Section>
-            <Section title="SKILLS"><AddLink text="Add skill" /></Section>
-            <Section title="PORTFOLIO/ WORK SAMPLES"><AddLink text="Add portfolio/ work sample" /></Section>
-            <Section title="ACCOMPLISHMENTS/ ADDITIONAL DETAILS"><AddLink text="Add accomplishment/ additional detail" /></Section>
+            <Section label="PORTFOLIO/ WORK SAMPLES">
+              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
+                <Plus size={14} />{" "}
+                <span className="ml-2">Add portfolio/ work sample</span>
+              </div>
+            </Section>
 
+            <Section label="ACCOMPLISHMENTS/ ADDITIONAL DETAILS">
+              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
+                <Plus size={14} />{" "}
+                <span className="ml-2">
+                  Add accomplishment/ additional detail
+                </span>
+              </div>
+            </Section>
           </div>
         </div>
+
+        <div className="h-6" />
       </div>
+
+      <ResumeModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        modalMode={modalMode}
+        modalSection={modalSection}
+        formData={formData}
+        onChange={handleFormChange}
+        onSave={saveForm}
+      />
     </div>
   );
 }
 
-function Section({ title, children }) {
+function Section({ label, children }) {
   return (
     <div>
-      <div className="text-xs tracking-wider text-gray-500 font-medium mb-3">{title}</div>
-      <div>{children}</div>
-      <div className="h-px bg-gray-100 mt-6" />
+      <div className="text-xs text-gray-500 tracking-wide font-medium mb-3">
+        {label}
+      </div>
+      {children}
+      <div className="mt-6 border-t border-gray-100" />
     </div>
   );
 }
 
-function AddLink({ text }) {
+function Card({ children }) {
   return (
-    <button className="text-blue-600 text-sm mt-3 flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
-      </svg>
-      {text}
-    </button>
+    <div className="bg-white border border-gray-100 rounded-md p-4 shadow-sm">
+      {children}
+    </div>
   );
 }
