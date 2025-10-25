@@ -50,6 +50,49 @@ export default function ResumeBuilder() {
     },
   ]);
 
+  const [extracurriculars, setExtracurriculars] = useState([
+    {
+      title: "Volunteer - Community Library",
+      description: "Managed book donations and weekend reading sessions.",
+    },
+    {
+      title: "College Football Team",
+      description: "Represented college in inter-university tournaments.",
+    },
+  ]);
+
+  const [trainings, setTrainings] = useState([
+    {
+      title: "Webdevelopment Internship",
+      company: "Appmantechnology Pvt.ltd, Bhubaneswar",
+      type: "Internship",
+      period: "Dec 2019 - Dec 2020 (1 year)",
+      description:
+        "I have done web development using node.js, mongodb, express js, mongoose with a realstate project.",
+    },
+  ]);
+
+  const [worksample, setWorksample] = useState([
+    {
+      title: "Webdevelopment Internship",
+      company: "Appmantechnology Pvt.ltd, Bhubaneswar",
+      type: "Internship",
+      period: "Dec 2019 - Dec 2020 (1 year)",
+      description:
+        "I have done web development using node.js, mongodb, express js, mongoose with a realstate project.",
+    },
+  ]);
+
+  const [academics, setAcademics] = useState([
+    {
+      title: "Webdevelopment Internship",
+      company: "Appmantechnology Pvt.ltd, Bhubaneswar",
+      type: "Internship",
+      period: "Dec 2019 - Dec 2020 (1 year)",
+      description:
+        "I have done web development using node.js, mongodb, express js, mongoose with a realstate project.",
+    },
+  ]);
 
   const [personalInfo, setPersonalInfo] = useState({
     name: "Jagan Rout",
@@ -57,6 +100,18 @@ export default function ResumeBuilder() {
     phone: "+91 9556246675",
     location: "Bhubaneswar",
   });
+
+
+  const [additionalDetails, setAdditionalDetails] = useState([
+    {
+      title: "Webdevelopment Internship",
+      company: "Appmantechnology Pvt.ltd, Bhubaneswar",
+      type: "Internship",
+      period: "Dec 2019 - Dec 2020 (1 year)",
+      description:
+        "I have done web development using node.js, mongodb, express js, mongoose with a realstate project.",
+    },
+  ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -69,13 +124,15 @@ export default function ResumeBuilder() {
     setModalSection(section);
     setEditingIndex(index);
 
-    // prefill formData depending on section & mode
     if (mode === "edit") {
       if (section === "education") setFormData(educations[index]);
       else if (section === "skill") setFormData({ name: skills[index] });
       else if (section === "experience") setFormData(experience[index]);
       else if (section === "career") setFormData({ text: "" });
       else if (section === "personal") setFormData(personalInfo);
+      else if (section === "extracurricular")
+        setFormData(extracurriculars[index]);
+      else if (section === "trainings") setFormData(trainings[index]);
     } else {
       if (section === "education")
         setFormData({ degree: "", college: "", year: "", cgpa: "" });
@@ -91,6 +148,10 @@ export default function ResumeBuilder() {
       else if (section === "career") setFormData({ text: "" });
       else if (section === "personal")
         setFormData({ name: "", email: "", phone: "", location: "" });
+      else if (section === "extracurricular")
+        setFormData({ title: "", description: "" });
+      else if (section === "trainings")
+        setFormData({ title: "", description: "" });
     }
 
     setIsModalOpen(true);
@@ -129,8 +190,49 @@ export default function ResumeBuilder() {
           s.map((it, i) => (i === editingIndex ? formData : it))
         );
     } else if (modalSection === "personal") {
-      // NEW: update personalInfo
+      // update personalInfo
       setPersonalInfo(formData);
+    } else if (modalSection === "extracurricular") {
+      // NEW: handle extracurricular add/edit
+      if (modalMode === "add") {
+        setExtracurriculars((s) => [formData, ...s]);
+      } else if (modalMode === "edit") {
+        setExtracurriculars((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+      }
+    } else if (modalSection === "trainings") {
+      if (modalMode === "add") {
+        setTrainings((s) => [formData, ...s]);
+      } else if (modalMode === "edit") {
+        setTrainings((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+      }
+    } else if (modalSection === "academics") {
+      if (modalMode === "add") {
+        setAcademics((s) => [formData, ...s]);
+      } else if (modalMode === "edit") {
+        setAcademics((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+      }
+    } else if (modalSection === "worksample") {
+      if (modalMode === "add") {
+        setWorksample((s) => [formData, ...s]);
+      } else if (modalMode === "edit") {
+        setWorksample((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+      }
+    }  else if (modalSection === "additionalDetails") {
+      if (modalMode === "add") {
+        setAdditionalDetails((s) => [formData, ...s]);
+      } else if (modalMode === "edit") {
+        setAdditionalDetails((s) =>
+          s.map((it, i) => (i === editingIndex ? formData : it))
+        );
+      }
     }
 
     closeModal();
@@ -142,6 +244,10 @@ export default function ResumeBuilder() {
 
   function removeEducation(index) {
     setEducations((s) => s.filter((_, i) => i !== index));
+  }
+
+  function removeExtracurricular(index) {
+    setExtracurriculars((s) => s.filter((_, i) => i !== index));
   }
 
   return (
@@ -187,7 +293,11 @@ export default function ResumeBuilder() {
                 <button
                   className="text-gray-500 hover:text-gray-700"
                   onClick={() =>
-                    openModal({ mode: "edit", section: "personal", index: null })
+                    openModal({
+                      mode: "edit",
+                      section: "personal",
+                      index: null,
+                    })
                   }
                 >
                   <Edit2 size={16} />
@@ -339,6 +449,145 @@ export default function ResumeBuilder() {
               </div>
             </Section>
 
+            {/* <-- IMPLEMENTED EXTRA CURRICULAR ACTIVITIES */}
+            <Section label="EXTRA CURRICULAR ACTIVITIES">
+              <div className="space-y-4">
+                {extracurriculars.map((ec, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ec.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "extracurricular",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeExtracurricular(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ec.description}
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "extracurricular" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add activity</span>
+                </div>
+              </div>
+            </Section>
+
+            <Section label="TRAININGS / COURSES">
+              <div className="space-y-4">
+                {trainings.map((ec, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ec.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "trainings",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeExtracurricular(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ec.description}
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "trainings" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add activity</span>
+                </div>
+              </div>
+            </Section>
+
+            <Section label="ACADEMICS/ PERSONAL PROJECTS">
+              <div className="space-y-4">
+                {academics.map((ec, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ec.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "academics",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeExtracurricular(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ec.description}
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "academics" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add activity</span>
+                </div>
+              </div>
+            </Section>
+
             <Section label="SKILLS">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white border border-gray-100 rounded-md p-4">
@@ -386,18 +635,94 @@ export default function ResumeBuilder() {
             </Section>
 
             <Section label="PORTFOLIO/ WORK SAMPLES">
-              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
-                <Plus size={14} />{" "}
-                <span className="ml-2">Add portfolio/ work sample</span>
+              <div className="space-y-4">
+                {worksample.map((ec, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ec.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "worksample",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeExtracurricular(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ec.description}
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "worksample" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add activity</span>
+                </div>
               </div>
             </Section>
 
             <Section label="ACCOMPLISHMENTS/ ADDITIONAL DETAILS">
-              <div className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center">
-                <Plus size={14} />{" "}
-                <span className="ml-2">
-                  Add accomplishment/ additional detail
-                </span>
+              <div className="space-y-4">
+                {additionalDetails.map((ec, idx) => (
+                  <Card key={idx}>
+                    <div className="flex justify-between">
+                      <div className="text-sm text-gray-800 font-semibold">
+                        {ec.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() =>
+                            openModal({
+                              mode: "edit",
+                              section: "additionalDetails",
+                              index: idx,
+                            })
+                          }
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-gray-100 rounded-full"
+                          onClick={() => removeExtracurricular(idx)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ec.description}
+                    </div>
+                  </Card>
+                ))}
+
+                <div
+                  className="text-sm text-blue-600 cursor-pointer hover:underline flex items-center"
+                  onClick={() =>
+                    openModal({ mode: "add", section: "additionalDetails" })
+                  }
+                >
+                  <Plus size={14} /> <span className="ml-2">Add activity</span>
+                </div>
               </div>
             </Section>
           </div>
