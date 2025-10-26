@@ -83,9 +83,9 @@ class EmployerService {
       TokenHelper.getHeader()
     );
   }
-async getUserAppliedJobs () {
+async getUserAppliedJobs (page = 1, limit = 1) {
   return axios.get(
-    `${REACT_APP_API_SERVICE_URL}/apply/myapplications`,
+    `${REACT_APP_API_SERVICE_URL}/apply/myapplications?page=${page}&limit=${limit}`,
     TokenHelper.getHeader()
   );
 };
@@ -106,9 +106,9 @@ async removeFromWishlist(jobId) {
     }
   );
 }
-async getUserWishlist () {
+async getUserWishlist (page = 1, limit = 1) {
   return axios.get(
-    `${REACT_APP_API_SERVICE_URL}/apply/wishlist`,
+    `${REACT_APP_API_SERVICE_URL}/apply/wishlist?page=${page}&limit=${limit}`,
     TokenHelper.getHeader()
   );
 };
