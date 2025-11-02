@@ -25,6 +25,7 @@ import JobList from "./pages/JobList.jsx";
 import MyApplication from "./pages/MyApplication.jsx";
 import ResumeBuilder from "./pages/ResumeBuilder.jsx";
 import MyWishlist from "./pages/MyWishlist.jsx";
+import Demo from "./pages/Demo";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="register" element={<Register />} />
+          <Route path="demo" element={<Demo />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/dashboard" element={<Dashboard />} />
