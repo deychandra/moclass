@@ -129,7 +129,7 @@ const Dashboard = () => {
         <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
         <nav className="space-y-4">
           <Link
-            to="/dashboard"
+            to="/profile"
             className="flex items-center gap-3 hover:bg-blue-900 px-3 py-2 rounded-lg"
           >
             <User className="w-5 h-5" /> Profile

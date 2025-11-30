@@ -7,6 +7,8 @@ const InitialState = {
     email: getFromLocal("email", ""),
     token: getFromLocal("token", ""),
     userType: getFromLocal("userType", ""),
+    pictureUpload: getFromLocal("pictureUpload", ""),
+    phoneNumber: getFromLocal("phoneNumber", ""),
 
 
 };
@@ -50,6 +52,20 @@ function reducer(state, action) {
                 ...state,
                 email: action.value,
             };
+        case "phoneNumber":
+            var local_value = JSON.stringify(action.value);
+            localStorage.setItem("phoneNumber", local_value)
+            return {
+                ...state,
+                phoneNumber: action.value,
+            };
+        case "pictureUpload":
+            var local_value = JSON.stringify(action.value);
+            localStorage.setItem("pictureUpload", local_value)
+            return {
+                ...state,
+                pictureUpload: action.value,
+            };
 
         case "reset":
             return { ...InitialState };
@@ -62,6 +78,8 @@ function reducer(state, action) {
                 email: getFromLocal("email", ""),
                 token: getFromLocal("token", ""),
                 userType: getFromLocal("userType", ""),
+                phoneNumber: getFromLocal("phoneNumber", ""),
+                pictureUpload: getFromLocal("pictureUpload", ""),
             };
 
         default:

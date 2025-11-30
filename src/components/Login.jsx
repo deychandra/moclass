@@ -59,6 +59,8 @@ const Login = () => {
             dispatch({ type: "id", value: response.data.id });
             dispatch({ type: "name", value: response.data.fullName });
             dispatch({ type: "email", value: response.data.email });
+            dispatch({ type: "pictureUpload", value: response.data.pictureUpload });
+            dispatch({ type: "phoneNumber", value: response.data.phoneNumber });
 
 
          
