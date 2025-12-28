@@ -71,6 +71,7 @@ console.log(otpValue,'otpValue')
         toast.success(response.data.message);
         navigate("/login", { state: { email } });
       } else {
+        console.log(response.data.error,'response.data.error')
         toast.error(response.data.error);
       }
     } catch (err) {
