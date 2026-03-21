@@ -81,7 +81,7 @@ const PostInternship = () => {
                 <input 
                   type="text" {...register("firstName")}
                   placeholder="First Name"
-                  className="flex-1 border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="flex-1 border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full"
                 />
                  {errors.firstName && (
               <p className="text-red-500 text-sm">{errors.firstName.message}</p>
@@ -89,7 +89,7 @@ const PostInternship = () => {
                 <input
                   type="text" {...register("lastName")}
                   placeholder="Last Name"
-                  className="flex-1 border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="flex-1 border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full"
                 />
                   {errors.lastName && (
               <p className="text-red-500 text-sm">{errors.lastName.message}</p>
